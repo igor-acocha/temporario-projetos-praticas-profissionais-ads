@@ -1,0 +1,1 @@
+# temporario-projetos-praticas-profissionais-ads
