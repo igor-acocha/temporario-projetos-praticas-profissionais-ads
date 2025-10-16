@@ -1,0 +1,41 @@
+server:
+  port: 8080
+  forward-headers-strategy: framework
+spring:
+  application:
+    name: tcc-backend
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      pool-name: ${SPRING_DATASOURCE_POOL_NAME}
+      maxLifetime: 30000
+      maximum-pool-size: ${SPRING_DATASOURCE_MAX_POOL_SIZE}
+      data-source-properties:
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        cachePrepStmts: true
+        useServerPrepStmts: true
+        useLocalSessionState: true
+        rewriteBatchedStatements: true
+        cacheResultSetMetadata: true
+        cacheServerConfiguration: true
+        elideSetAutoCommits: true
+        maintainTimeStats: false
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: update
+    mvc:
+      locale: en_US
+      locale-resolver: fixed
+project:
+  version: '@project.version@'
+  description: '@project.description@'
+  name: '@project.name@'
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS}
