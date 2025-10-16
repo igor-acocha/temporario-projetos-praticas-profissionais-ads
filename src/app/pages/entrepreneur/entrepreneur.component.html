@@ -1,0 +1,273 @@
+<div class="entrepreneur-container" [@pageAnimation]>
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <h2>{{ 'entrepreneur.default.title' | translate }}</h2>
+        <p class="card-subtitle">{{ 'entrepreneur.default.description' | translate }}</p>
+      </div>
+    </ng-template>
+
+    <p-toolbar styleClass="mb-4">
+      <ng-template pTemplate="left">
+        <p-button 
+          [label]="'entrepreneur.default.new' | translate"
+          icon="pi pi-plus" 
+          (onClick)="newEntrepreneur()">
+        </p-button>
+      </ng-template>
+      
+      <ng-template pTemplate="center">
+        <div class="search-container">
+            <p-iconfield>
+                <p-inputicon class="pi pi-search" />
+                <input type="text" pInputText 
+                  [placeholder]="'common.search' | translate" 
+                  [(ngModel)]="searchTerm" 
+                  (ngModelChange)="onSearch()" />
+            </p-iconfield>
+        </div>
+      </ng-template>
+    </p-toolbar>
+
+    <p-table 
+      [value]="filteredEntrepreneurs" 
+      [loading]="loading"
+      [scrollable]="true"
+      scrollHeight="350px"
+      styleClass="p-datatable-striped"
+      [sortField]="sortField"
+      [sortOrder]="sortOrder"
+      (onSort)="onSort($event)"
+      [paginator]="true"
+      [rows]="rowsPerPage"
+      [totalRecords]="filteredEntrepreneurs.length"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="{first} - {last} de {totalRecords} registros">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="cnpj">
+            {{ 'entrepreneur.cnpj' | translate }}
+            <p-sortIcon field="cnpj"></p-sortIcon>
+          </th>
+          <th pSortableColumn="companyName">
+            {{ 'entrepreneur.companyName' | translate }}
+            <p-sortIcon field="companyName"></p-sortIcon>
+          </th>
+          <th pSortableColumn="description">
+            {{ 'entrepreneur.description' | translate }}
+            <p-sortIcon field="description"></p-sortIcon>
+          </th>
+          <th pSortableColumn="email">
+            {{ 'entrepreneur.email' | translate }}
+            <p-sortIcon field="email"></p-sortIcon>
+          </th>
+          <th pSortableColumn="phone">
+            {{ 'entrepreneur.phone' | translate }}
+            <p-sortIcon field="phone"></p-sortIcon>
+          </th>
+          <th pSortableColumn="registrationDate">
+            {{ 'entrepreneur.registrationDate' | translate }}
+            <p-sortIcon field="registrationDate"></p-sortIcon>
+          </th>
+          <th style="width: 120px; text-align: right">{{ 'common.actions' | translate }}</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-entrepreneur>
+        <tr>
+          <td>{{ entrepreneur.cnpj }}</td>
+          <td>{{ entrepreneur.companyName }}</td>
+          <td>{{ entrepreneur.description }}</td>
+          <td>{{ entrepreneur.email }}</td>
+          <td>{{ entrepreneur.phone }}</td>
+          <td>{{ entrepreneur.registrationDate }}</td>
+          <td style="text-align: right">
+            <div class="action-buttons">
+              <p-button 
+                icon="pi pi-pencil" 
+                severity="info" 
+                size="small"
+                [text]="true"
+                [pTooltip]="'common.edit' | translate"
+                (onClick)="edit(entrepreneur)">
+              </p-button>
+              <p-button 
+                icon="pi pi-trash" 
+                severity="danger" 
+                [text]="true"
+                size="small"
+                [pTooltip]="'common.delete' | translate"
+                (onClick)="confirmDelete(entrepreneur)">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="loadingbody">
+        <tr *ngFor="let item of [1,2,3,4,5]">
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td style="text-align: right">
+            <div class="action-buttons">
+              <div class="skeleton-button"></div>
+              <div class="skeleton-button"></div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="7" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-list empty-icon"></i>
+              <p>{{ 'entrepreneur.default.empty' | translate }}</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Dialog para criar/editar entrepreneur -->
+  <p-dialog 
+    [header]="isEditing ? ('entrepreneur.default.edit' | translate) : ('entrepreneur.default.new' | translate)"
+    [(visible)]="displayDialog" 
+    [modal]="true" 
+    [style]="{width: '450px'}"
+    [draggable]="false"
+    [resizable]="false">
+    
+    <div class="dialog-content">
+      <form [formGroup]="entrepreneurForm">
+        <!-- Tabela Normal: Campos regulares -->
+        <div class="field">
+          <label for="cnpj">{{ 'entrepreneur.cnpj' | translate }}</label>
+          <input 
+            id="cnpj"
+            type="text" 
+            pInputText 
+            formControlName="cnpj"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="entrepreneurForm.get('cnpj')?.invalid && entrepreneurForm.get('cnpj')?.touched" class="input-error">
+            <small *ngIf="entrepreneurForm.get('cnpj')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="companyName">{{ 'entrepreneur.companyName' | translate }} *</label>
+          <input 
+            id="companyName"
+            type="text" 
+            pInputText 
+            formControlName="companyName"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="entrepreneurForm.get('companyName')?.invalid && entrepreneurForm.get('companyName')?.touched" class="input-error">
+            <small *ngIf="entrepreneurForm.get('companyName')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="entrepreneurForm.get('companyName')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="description">{{ 'entrepreneur.description' | translate }} *</label>
+          <input 
+            id="description"
+            type="text" 
+            pInputText 
+            formControlName="description"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="entrepreneurForm.get('description')?.invalid && entrepreneurForm.get('description')?.touched" class="input-error">
+            <small *ngIf="entrepreneurForm.get('description')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="entrepreneurForm.get('description')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="email">{{ 'entrepreneur.email' | translate }} *</label>
+          <input 
+            id="email"
+            type="text" 
+            pInputText 
+            formControlName="email"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="entrepreneurForm.get('email')?.invalid && entrepreneurForm.get('email')?.touched" class="input-error">
+            <small *ngIf="entrepreneurForm.get('email')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="entrepreneurForm.get('email')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="phone">{{ 'entrepreneur.phone' | translate }} *</label>
+          <input 
+            id="phone"
+            type="text" 
+            pInputText 
+            formControlName="phone"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="entrepreneurForm.get('phone')?.invalid && entrepreneurForm.get('phone')?.touched" class="input-error">
+            <small *ngIf="entrepreneurForm.get('phone')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="entrepreneurForm.get('phone')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="registrationDate">{{ 'entrepreneur.registrationDate' | translate }}</label>
+          <input 
+            id="registrationDate"
+            type="text" 
+            pInputText 
+            formControlName="registrationDate"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="entrepreneurForm.get('registrationDate')?.invalid && entrepreneurForm.get('registrationDate')?.touched" class="input-error">
+            <small *ngIf="entrepreneurForm.get('registrationDate')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        
+        <!-- Relacionamentos Many-to-Many (apenas o lado pai da relação) -->
+      </form>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="dialog-footer">
+        <p-button 
+          [label]="'common.cancel' | translate"
+          icon="pi pi-times" 
+          variant="outlined"
+          (onClick)="closeDialog()">
+        </p-button>
+        <p-button 
+          [label]="'common.save' | translate"
+          icon="pi pi-check" 
+          (onClick)="save()"
+          [loading]="loading"
+          [disabled]="entrepreneurForm.invalid">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+<!-- Toast para mensagens -->
+<p-toast></p-toast>
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>

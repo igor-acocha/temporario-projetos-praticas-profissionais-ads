@@ -1,0 +1,229 @@
+<div class="administrator-container" [@pageAnimation]>
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <h2>{{ 'administrator.default.title' | translate }}</h2>
+        <p class="card-subtitle">{{ 'administrator.default.description' | translate }}</p>
+      </div>
+    </ng-template>
+
+    <p-toolbar styleClass="mb-4">
+      <ng-template pTemplate="left">
+        <p-button 
+          [label]="'administrator.default.new' | translate"
+          icon="pi pi-plus" 
+          (onClick)="newAdministrator()">
+        </p-button>
+      </ng-template>
+      
+      <ng-template pTemplate="center">
+        <div class="search-container">
+            <p-iconfield>
+                <p-inputicon class="pi pi-search" />
+                <input type="text" pInputText 
+                  [placeholder]="'common.search' | translate" 
+                  [(ngModel)]="searchTerm" 
+                  (ngModelChange)="onSearch()" />
+            </p-iconfield>
+        </div>
+      </ng-template>
+    </p-toolbar>
+
+    <p-table 
+      [value]="filteredAdministrators" 
+      [loading]="loading"
+      [scrollable]="true"
+      scrollHeight="350px"
+      styleClass="p-datatable-striped"
+      [sortField]="sortField"
+      [sortOrder]="sortOrder"
+      (onSort)="onSort($event)"
+      [paginator]="true"
+      [rows]="rowsPerPage"
+      [totalRecords]="filteredAdministrators.length"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="{first} - {last} de {totalRecords} registros">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">
+            {{ 'administrator.name' | translate }}
+            <p-sortIcon field="name"></p-sortIcon>
+          </th>
+          <th pSortableColumn="email">
+            {{ 'administrator.email' | translate }}
+            <p-sortIcon field="email"></p-sortIcon>
+          </th>
+          <th pSortableColumn="password">
+            {{ 'administrator.password' | translate }}
+            <p-sortIcon field="password"></p-sortIcon>
+          </th>
+          <th pSortableColumn="creationDate">
+            {{ 'administrator.creationDate' | translate }}
+            <p-sortIcon field="creationDate"></p-sortIcon>
+          </th>
+          <th style="width: 120px; text-align: right">{{ 'common.actions' | translate }}</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-administrator>
+        <tr>
+          <td>{{ administrator.name }}</td>
+          <td>{{ administrator.email }}</td>
+          <td>{{ administrator.password }}</td>
+          <td>{{ administrator.creationDate }}</td>
+          <td style="text-align: right">
+            <div class="action-buttons">
+              <p-button 
+                icon="pi pi-pencil" 
+                severity="info" 
+                size="small"
+                [text]="true"
+                [pTooltip]="'common.edit' | translate"
+                (onClick)="edit(administrator)">
+              </p-button>
+              <p-button 
+                icon="pi pi-trash" 
+                severity="danger" 
+                [text]="true"
+                size="small"
+                [pTooltip]="'common.delete' | translate"
+                (onClick)="confirmDelete(administrator)">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="loadingbody">
+        <tr *ngFor="let item of [1,2,3,4,5]">
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td style="text-align: right">
+            <div class="action-buttons">
+              <div class="skeleton-button"></div>
+              <div class="skeleton-button"></div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="5" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-list empty-icon"></i>
+              <p>{{ 'administrator.default.empty' | translate }}</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Dialog para criar/editar administrator -->
+  <p-dialog 
+    [header]="isEditing ? ('administrator.default.edit' | translate) : ('administrator.default.new' | translate)"
+    [(visible)]="displayDialog" 
+    [modal]="true" 
+    [style]="{width: '450px'}"
+    [draggable]="false"
+    [resizable]="false">
+    
+    <div class="dialog-content">
+      <form [formGroup]="administratorForm">
+        <!-- Tabela Normal: Campos regulares -->
+        <div class="field">
+          <label for="name">{{ 'administrator.name' | translate }} *</label>
+          <input 
+            id="name"
+            type="text" 
+            pInputText 
+            formControlName="name"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="administratorForm.get('name')?.invalid && administratorForm.get('name')?.touched" class="input-error">
+            <small *ngIf="administratorForm.get('name')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="administratorForm.get('name')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="email">{{ 'administrator.email' | translate }} *</label>
+          <input 
+            id="email"
+            type="text" 
+            pInputText 
+            formControlName="email"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="administratorForm.get('email')?.invalid && administratorForm.get('email')?.touched" class="input-error">
+            <small *ngIf="administratorForm.get('email')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="administratorForm.get('email')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="password">{{ 'administrator.password' | translate }} *</label>
+          <input 
+            id="password"
+            type="text" 
+            pInputText 
+            formControlName="password"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="administratorForm.get('password')?.invalid && administratorForm.get('password')?.touched" class="input-error">
+            <small *ngIf="administratorForm.get('password')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="administratorForm.get('password')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="creationDate">{{ 'administrator.creationDate' | translate }}</label>
+          <input 
+            id="creationDate"
+            type="text" 
+            pInputText 
+            formControlName="creationDate"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="administratorForm.get('creationDate')?.invalid && administratorForm.get('creationDate')?.touched" class="input-error">
+            <small *ngIf="administratorForm.get('creationDate')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="dialog-footer">
+        <p-button 
+          [label]="'common.cancel' | translate"
+          icon="pi pi-times" 
+          variant="outlined"
+          (onClick)="closeDialog()">
+        </p-button>
+        <p-button 
+          [label]="'common.save' | translate"
+          icon="pi pi-check" 
+          (onClick)="save()"
+          [loading]="loading"
+          [disabled]="administratorForm.invalid">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+<!-- Toast para mensagens -->
+<p-toast></p-toast>
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>

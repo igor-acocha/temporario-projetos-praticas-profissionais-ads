@@ -1,0 +1,291 @@
+<div class="evaluation-container" [@pageAnimation]>
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <h2>{{ 'evaluation.default.title' | translate }}</h2>
+        <p class="card-subtitle">{{ 'evaluation.default.description' | translate }}</p>
+      </div>
+    </ng-template>
+
+    <p-toolbar styleClass="mb-4">
+      <ng-template pTemplate="left">
+        <p-button 
+          [label]="'evaluation.default.new' | translate"
+          icon="pi pi-plus" 
+          (onClick)="newEvaluation()">
+        </p-button>
+      </ng-template>
+      
+      <ng-template pTemplate="center">
+        <div class="search-container">
+            <p-iconfield>
+                <p-inputicon class="pi pi-search" />
+                <input type="text" pInputText 
+                  [placeholder]="'common.search' | translate" 
+                  [(ngModel)]="searchTerm" 
+                  (ngModelChange)="onSearch()" />
+            </p-iconfield>
+        </div>
+      </ng-template>
+    </p-toolbar>
+
+    <p-table 
+      [value]="filteredEvaluations" 
+      [loading]="loading"
+      [scrollable]="true"
+      scrollHeight="350px"
+      styleClass="p-datatable-striped"
+      [sortField]="sortField"
+      [sortOrder]="sortOrder"
+      (onSort)="onSort($event)"
+      [paginator]="true"
+      [rows]="rowsPerPage"
+      [totalRecords]="filteredEvaluations.length"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="{first} - {last} de {totalRecords} registros">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="score">
+            {{ 'evaluation.score' | translate }}
+            <p-sortIcon field="score"></p-sortIcon>
+          </th>
+          <th pSortableColumn="comment">
+            {{ 'evaluation.comment' | translate }}
+            <p-sortIcon field="comment"></p-sortIcon>
+          </th>
+          <th pSortableColumn="evaluationDate">
+            {{ 'evaluation.evaluationDate' | translate }}
+            <p-sortIcon field="evaluationDate"></p-sortIcon>
+          </th>
+          <th pSortableColumn="idEvaluator">
+            {{ 'evaluation.idEvaluator' | translate }}
+            <p-sortIcon field="idEvaluator"></p-sortIcon>
+          </th>
+          <th pSortableColumn="idEvaluated">
+            {{ 'evaluation.idEvaluated' | translate }}
+            <p-sortIcon field="idEvaluated"></p-sortIcon>
+          </th>
+          <th pSortableColumn="evaluatorType">
+            {{ 'evaluation.evaluatorType' | translate }}
+            <p-sortIcon field="evaluatorType"></p-sortIcon>
+          </th>
+          <th style="width: 120px; text-align: right">{{ 'common.actions' | translate }}</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-evaluation>
+        <tr>
+          <td>{{ evaluation.score | number }}</td>
+          <td>{{ evaluation.comment }}</td>
+          <td>{{ evaluation.evaluationDate }}</td>
+          <td>{{ evaluation.idEvaluator }}</td>
+          <td>{{ evaluation.idEvaluated }}</td>
+          <td>{{ evaluation.evaluatorType }}</td>
+          <td style="text-align: right">
+            <div class="action-buttons">
+              <p-button 
+                icon="pi pi-pencil" 
+                severity="info" 
+                size="small"
+                [text]="true"
+                [pTooltip]="'common.edit' | translate"
+                (onClick)="edit(evaluation)">
+              </p-button>
+              <p-button 
+                icon="pi pi-trash" 
+                severity="danger" 
+                [text]="true"
+                size="small"
+                [pTooltip]="'common.delete' | translate"
+                (onClick)="confirmDelete(evaluation)">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="loadingbody">
+        <tr *ngFor="let item of [1,2,3,4,5]">
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td style="text-align: right">
+            <div class="action-buttons">
+              <div class="skeleton-button"></div>
+              <div class="skeleton-button"></div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="7" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-list empty-icon"></i>
+              <p>{{ 'evaluation.default.empty' | translate }}</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Dialog para criar/editar evaluation -->
+  <p-dialog 
+    [header]="isEditing ? ('evaluation.default.edit' | translate) : ('evaluation.default.new' | translate)"
+    [(visible)]="displayDialog" 
+    [modal]="true" 
+    [style]="{width: '450px'}"
+    [draggable]="false"
+    [resizable]="false">
+    
+    <div class="dialog-content">
+      <form [formGroup]="evaluationForm">
+        <!-- Tabela Normal: Campos regulares -->
+        <div class="field">
+          <label for="score">{{ 'evaluation.score' | translate }} *</label>
+          <p-inputnumber
+            id="score"
+            formControlName="score"
+            mode="decimal"
+            [useGrouping]="false"
+            class="w-full"
+            [placeholder]="'common.enterNumber' | translate">
+          </p-inputnumber>
+          <div *ngIf="evaluationForm.get('score')?.invalid && evaluationForm.get('score')?.touched" class="input-error">
+            <small>{{ 'common.inputRequired' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="comment">{{ 'evaluation.comment' | translate }} *</label>
+          <input 
+            id="comment"
+            type="text" 
+            pInputText 
+            formControlName="comment"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="evaluationForm.get('comment')?.invalid && evaluationForm.get('comment')?.touched" class="input-error">
+            <small *ngIf="evaluationForm.get('comment')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="evaluationForm.get('comment')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="evaluationDate">{{ 'evaluation.evaluationDate' | translate }}</label>
+          <input 
+            id="evaluationDate"
+            type="text" 
+            pInputText 
+            formControlName="evaluationDate"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="evaluationForm.get('evaluationDate')?.invalid && evaluationForm.get('evaluationDate')?.touched" class="input-error">
+            <small *ngIf="evaluationForm.get('evaluationDate')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="idProject">{{ 'evaluation.idProject' | translate }} *</label>
+          <!-- FK Simples -->
+          <p-select 
+            id="project"
+            formControlName="project"
+            [options]="fkProjectOptions"
+            optionLabel="label"
+            optionValue="value"
+            appendTo="body"
+            class="w-full"
+            [showClear]="true"
+            [placeholder]="'common.selectOption' | translate">
+          </p-select>
+          <div *ngIf="evaluationForm.get('project')?.invalid && evaluationForm.get('project')?.touched" class="input-error">
+            <small>{{ 'common.inputRequired' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="idEvaluator">{{ 'evaluation.idEvaluator' | translate }} *</label>
+          <input 
+            id="idEvaluator"
+            type="text" 
+            pInputText 
+            formControlName="idEvaluator"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="evaluationForm.get('idEvaluator')?.invalid && evaluationForm.get('idEvaluator')?.touched" class="input-error">
+            <small *ngIf="evaluationForm.get('idEvaluator')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="evaluationForm.get('idEvaluator')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="idEvaluated">{{ 'evaluation.idEvaluated' | translate }} *</label>
+          <input 
+            id="idEvaluated"
+            type="text" 
+            pInputText 
+            formControlName="idEvaluated"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="evaluationForm.get('idEvaluated')?.invalid && evaluationForm.get('idEvaluated')?.touched" class="input-error">
+            <small *ngIf="evaluationForm.get('idEvaluated')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="evaluationForm.get('idEvaluated')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="evaluatorType">{{ 'evaluation.evaluatorType' | translate }} *</label>
+          <input 
+            id="evaluatorType"
+            type="text" 
+            pInputText 
+            formControlName="evaluatorType"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="evaluationForm.get('evaluatorType')?.invalid && evaluationForm.get('evaluatorType')?.touched" class="input-error">
+            <small *ngIf="evaluationForm.get('evaluatorType')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="evaluationForm.get('evaluatorType')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="dialog-footer">
+        <p-button 
+          [label]="'common.cancel' | translate"
+          icon="pi pi-times" 
+          variant="outlined"
+          (onClick)="closeDialog()">
+        </p-button>
+        <p-button 
+          [label]="'common.save' | translate"
+          icon="pi pi-check" 
+          (onClick)="save()"
+          [loading]="loading"
+          [disabled]="evaluationForm.invalid">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+<!-- Toast para mensagens -->
+<p-toast></p-toast>
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>

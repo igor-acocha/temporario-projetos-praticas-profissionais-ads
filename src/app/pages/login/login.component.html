@@ -1,0 +1,49 @@
+<div class="login-container" [@pageAnimation]>
+  <p-card styleClass="login-card shadow-5">
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <h2>Seja bem-vindo(a)</h2>
+        <p>Faça login para continuar</p>
+      </div>
+    </ng-template>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="p-fluid">
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" type="email" pInputText formControlName="email" placeholder="seuemail@exemplo.com" />
+          <small *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="input-error">
+            <span *ngIf="email?.errors?.['required']">E-mail é obrigatório.</span>
+            <span *ngIf="email?.errors?.['email']">Formato de e-mail inválido.</span>
+          </small>
+        </div>
+
+        <div class="field">
+          <label for="password">Senha</label>
+          <input id="password" type="password" pInputText formControlName="password" placeholder="Sua senha" />
+           <small *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="input-error">
+            Senha é obrigatória.
+          </small>
+        </div>
+      </div>
+    </form>
+    
+    <ng-template pTemplate="footer">
+      <p-message *ngIf="errorMessage" severity="error" [text]="errorMessage" styleClass="w-full mb-3"></p-message>
+
+      <button pButton 
+        type="submit" 
+        label="Entrar" 
+        [loading]="isLoggingIn"
+        [disabled]="loginForm.invalid || isLoggingIn"
+        (click)="onSubmit()"
+        class="w-full">
+      </button>
+
+      <div class="mt-4 text-center">
+        <span>Não tem uma conta? </span>
+        <a (click)="goToRegister()">Cadastre-se</a>
+      </div>
+    </ng-template>
+  </p-card>
+</div>

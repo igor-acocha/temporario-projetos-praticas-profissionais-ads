@@ -1,0 +1,243 @@
+<div class="application-container" [@pageAnimation]>
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <h2>{{ 'application.default.title' | translate }}</h2>
+        <p class="card-subtitle">{{ 'application.default.description' | translate }}</p>
+      </div>
+    </ng-template>
+
+    <p-toolbar styleClass="mb-4">
+      <ng-template pTemplate="left">
+        <p-button 
+          [label]="'application.default.new' | translate"
+          icon="pi pi-plus" 
+          (onClick)="newApplication()">
+        </p-button>
+      </ng-template>
+      
+      <ng-template pTemplate="center">
+        <div class="search-container">
+            <p-iconfield>
+                <p-inputicon class="pi pi-search" />
+                <input type="text" pInputText 
+                  [placeholder]="'common.search' | translate" 
+                  [(ngModel)]="searchTerm" 
+                  (ngModelChange)="onSearch()" />
+            </p-iconfield>
+        </div>
+      </ng-template>
+    </p-toolbar>
+
+    <p-table 
+      [value]="filteredApplications" 
+      [loading]="loading"
+      [scrollable]="true"
+      scrollHeight="350px"
+      styleClass="p-datatable-striped"
+      [sortField]="sortField"
+      [sortOrder]="sortOrder"
+      (onSort)="onSort($event)"
+      [paginator]="true"
+      [rows]="rowsPerPage"
+      [totalRecords]="filteredApplications.length"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="{first} - {last} de {totalRecords} registros">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="idea">
+            {{ 'application.idea' | translate }}
+            <p-sortIcon field="idea"></p-sortIcon>
+          </th>
+          <th pSortableColumn="status">
+            {{ 'application.status' | translate }}
+            <p-sortIcon field="status"></p-sortIcon>
+          </th>
+          <th pSortableColumn="applicationDate">
+            {{ 'application.applicationDate' | translate }}
+            <p-sortIcon field="applicationDate"></p-sortIcon>
+          </th>
+          <th style="width: 120px; text-align: right">{{ 'common.actions' | translate }}</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-application>
+        <tr>
+          <td>{{ application.idea }}</td>
+          <td>{{ application.status }}</td>
+          <td>{{ application.applicationDate }}</td>
+          <td style="text-align: right">
+            <div class="action-buttons">
+              <p-button 
+                icon="pi pi-pencil" 
+                severity="info" 
+                size="small"
+                [text]="true"
+                [pTooltip]="'common.edit' | translate"
+                (onClick)="edit(application)">
+              </p-button>
+              <p-button 
+                icon="pi pi-trash" 
+                severity="danger" 
+                [text]="true"
+                size="small"
+                [pTooltip]="'common.delete' | translate"
+                (onClick)="confirmDelete(application)">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="loadingbody">
+        <tr *ngFor="let item of [1,2,3,4,5]">
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td style="text-align: right">
+            <div class="action-buttons">
+              <div class="skeleton-button"></div>
+              <div class="skeleton-button"></div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="4" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-list empty-icon"></i>
+              <p>{{ 'application.default.empty' | translate }}</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Dialog para criar/editar application -->
+  <p-dialog 
+    [header]="isEditing ? ('application.default.edit' | translate) : ('application.default.new' | translate)"
+    [(visible)]="displayDialog" 
+    [modal]="true" 
+    [style]="{width: '450px'}"
+    [draggable]="false"
+    [resizable]="false">
+    
+    <div class="dialog-content">
+      <form [formGroup]="applicationForm">
+        <!-- Tabela de Junção Complexa: Dropdowns para relacionamentos + campos extras -->
+        <div class="field">
+          <label for="student">{{ 'application.idStudent' | translate }} *</label>
+          <p-select 
+            id="student"
+            formControlName="student"
+            [options]="fkStudentOptions"
+            optionLabel="label"
+            optionValue="value"
+            appendTo="body"
+            class="w-full"
+            [showClear]="true"
+            [placeholder]="'common.selectOption' | translate">
+          </p-select>
+          <div *ngIf="applicationForm.get('student')?.invalid && applicationForm.get('student')?.touched" class="input-error">
+            <small>{{ 'common.inputRequired' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="project">{{ 'application.idProject' | translate }} *</label>
+          <p-select 
+            id="project"
+            formControlName="project"
+            [options]="fkProjectOptions"
+            optionLabel="label"
+            optionValue="value"
+            appendTo="body"
+            class="w-full"
+            [showClear]="true"
+            [placeholder]="'common.selectOption' | translate">
+          </p-select>
+          <div *ngIf="applicationForm.get('project')?.invalid && applicationForm.get('project')?.touched" class="input-error">
+            <small>{{ 'common.inputRequired' | translate }}</small>
+          </div>
+        </div>
+        
+        <!-- Campos extras da tabela de junção -->
+        <div class="field">
+          <label for="idea">{{ 'application.idea' | translate }}</label>
+          <input 
+            id="idea"
+            type="text" 
+            pInputText 
+            formControlName="idea"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="applicationForm.get('idea')?.invalid && applicationForm.get('idea')?.touched" class="input-error">
+            <small *ngIf="applicationForm.get('idea')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="status">{{ 'application.status' | translate }} *</label>
+          <input 
+            id="status"
+            type="text" 
+            pInputText 
+            formControlName="status"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="applicationForm.get('status')?.invalid && applicationForm.get('status')?.touched" class="input-error">
+            <small *ngIf="applicationForm.get('status')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="applicationForm.get('status')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="applicationDate">{{ 'application.applicationDate' | translate }}</label>
+          <input 
+            id="applicationDate"
+            type="text" 
+            pInputText 
+            formControlName="applicationDate"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="applicationForm.get('applicationDate')?.invalid && applicationForm.get('applicationDate')?.touched" class="input-error">
+            <small *ngIf="applicationForm.get('applicationDate')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        
+        
+      </form>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="dialog-footer">
+        <p-button 
+          [label]="'common.cancel' | translate"
+          icon="pi pi-times" 
+          variant="outlined"
+          (onClick)="closeDialog()">
+        </p-button>
+        <p-button 
+          [label]="'common.save' | translate"
+          icon="pi pi-check" 
+          (onClick)="save()"
+          [loading]="loading"
+          [disabled]="applicationForm.invalid">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+<!-- Toast para mensagens -->
+<p-toast></p-toast>
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>

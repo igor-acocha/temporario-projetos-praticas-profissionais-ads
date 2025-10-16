@@ -1,0 +1,184 @@
+<div class="business-area-container" [@pageAnimation]>
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <h2>{{ 'business-area.default.title' | translate }}</h2>
+        <p class="card-subtitle">{{ 'business-area.default.description' | translate }}</p>
+      </div>
+    </ng-template>
+
+    <p-toolbar styleClass="mb-4">
+      <ng-template pTemplate="left">
+        <p-button 
+          [label]="'business-area.default.new' | translate"
+          icon="pi pi-plus" 
+          (onClick)="newBusinessArea()">
+        </p-button>
+      </ng-template>
+      
+      <ng-template pTemplate="center">
+        <div class="search-container">
+            <p-iconfield>
+                <p-inputicon class="pi pi-search" />
+                <input type="text" pInputText 
+                  [placeholder]="'common.search' | translate" 
+                  [(ngModel)]="searchTerm" 
+                  (ngModelChange)="onSearch()" />
+            </p-iconfield>
+        </div>
+      </ng-template>
+    </p-toolbar>
+
+    <p-table 
+      [value]="filteredBusinessAreas" 
+      [loading]="loading"
+      [scrollable]="true"
+      scrollHeight="350px"
+      styleClass="p-datatable-striped"
+      [sortField]="sortField"
+      [sortOrder]="sortOrder"
+      (onSort)="onSort($event)"
+      [paginator]="true"
+      [rows]="rowsPerPage"
+      [totalRecords]="filteredBusinessAreas.length"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="{first} - {last} de {totalRecords} registros">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">
+            {{ 'business-area.name' | translate }}
+            <p-sortIcon field="name"></p-sortIcon>
+          </th>
+          <th style="width: 120px; text-align: right">{{ 'common.actions' | translate }}</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-businessArea>
+        <tr>
+          <td>{{ businessArea.name }}</td>
+          <td style="text-align: right">
+            <div class="action-buttons">
+              <p-button 
+                icon="pi pi-pencil" 
+                severity="info" 
+                size="small"
+                [text]="true"
+                [pTooltip]="'common.edit' | translate"
+                (onClick)="edit(businessArea)">
+              </p-button>
+              <p-button 
+                icon="pi pi-trash" 
+                severity="danger" 
+                [text]="true"
+                size="small"
+                [pTooltip]="'common.delete' | translate"
+                (onClick)="confirmDelete(businessArea)">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="loadingbody">
+        <tr *ngFor="let item of [1,2,3,4,5]">
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td style="text-align: right">
+            <div class="action-buttons">
+              <div class="skeleton-button"></div>
+              <div class="skeleton-button"></div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="2" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-list empty-icon"></i>
+              <p>{{ 'business-area.default.empty' | translate }}</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Dialog para criar/editar businessArea -->
+  <p-dialog 
+    [header]="isEditing ? ('business-area.default.edit' | translate) : ('business-area.default.new' | translate)"
+    [(visible)]="displayDialog" 
+    [modal]="true" 
+    [style]="{width: '450px'}"
+    [draggable]="false"
+    [resizable]="false">
+    
+    <div class="dialog-content">
+      <form [formGroup]="businessAreaForm">
+        <!-- Tabela Normal: Campos regulares -->
+        <div class="field">
+          <label for="name">{{ 'business-area.name' | translate }} *</label>
+          <input 
+            id="name"
+            type="text" 
+            pInputText 
+            formControlName="name"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="businessAreaForm.get('name')?.invalid && businessAreaForm.get('name')?.touched" class="input-error">
+            <small *ngIf="businessAreaForm.get('name')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="businessAreaForm.get('name')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        
+        <!-- Relacionamentos Many-to-Many (apenas o lado pai da relação) -->
+        <div class="field">
+          <label for="entrepreneurs">{{ 'business-area.entrepreneur' | translate }}</label>
+          <p-multiselect
+            id="entrepreneurs"
+            formControlName="entrepreneurs"
+            [options]="entrepreneurOptions"
+            optionLabel="name"
+            optionValue="id"
+            appendTo="body"
+            class="w-full"
+            [filter]="true"
+            filterBy="name"
+            [placeholder]="'business-area.selectEntrepreneur' | translate"
+            [showToggleAll]="true"
+            [showHeader]="true"
+            [maxSelectedLabels]="3"
+            selectedItemsLabel="{0} entrepreneur selecionados">
+          </p-multiselect>
+        </div>
+      </form>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="dialog-footer">
+        <p-button 
+          [label]="'common.cancel' | translate"
+          icon="pi pi-times" 
+          variant="outlined"
+          (onClick)="closeDialog()">
+        </p-button>
+        <p-button 
+          [label]="'common.save' | translate"
+          icon="pi pi-check" 
+          (onClick)="save()"
+          [loading]="loading"
+          [disabled]="businessAreaForm.invalid">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+<!-- Toast para mensagens -->
+<p-toast></p-toast>
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>

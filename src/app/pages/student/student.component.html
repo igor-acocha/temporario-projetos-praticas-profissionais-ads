@@ -1,0 +1,252 @@
+<div class="student-container" [@pageAnimation]>
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <h2>{{ 'student.default.title' | translate }}</h2>
+        <p class="card-subtitle">{{ 'student.default.description' | translate }}</p>
+      </div>
+    </ng-template>
+
+    <p-toolbar styleClass="mb-4">
+      <ng-template pTemplate="left">
+        <p-button 
+          [label]="'student.default.new' | translate"
+          icon="pi pi-plus" 
+          (onClick)="newStudent()">
+        </p-button>
+      </ng-template>
+      
+      <ng-template pTemplate="center">
+        <div class="search-container">
+            <p-iconfield>
+                <p-inputicon class="pi pi-search" />
+                <input type="text" pInputText 
+                  [placeholder]="'common.search' | translate" 
+                  [(ngModel)]="searchTerm" 
+                  (ngModelChange)="onSearch()" />
+            </p-iconfield>
+        </div>
+      </ng-template>
+    </p-toolbar>
+
+    <p-table 
+      [value]="filteredStudents" 
+      [loading]="loading"
+      [scrollable]="true"
+      scrollHeight="350px"
+      styleClass="p-datatable-striped"
+      [sortField]="sortField"
+      [sortOrder]="sortOrder"
+      (onSort)="onSort($event)"
+      [paginator]="true"
+      [rows]="rowsPerPage"
+      [totalRecords]="filteredStudents.length"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="{first} - {last} de {totalRecords} registros">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">
+            {{ 'student.name' | translate }}
+            <p-sortIcon field="name"></p-sortIcon>
+          </th>
+          <th pSortableColumn="phone">
+            {{ 'student.phone' | translate }}
+            <p-sortIcon field="phone"></p-sortIcon>
+          </th>
+          <th pSortableColumn="email">
+            {{ 'student.email' | translate }}
+            <p-sortIcon field="email"></p-sortIcon>
+          </th>
+          <th pSortableColumn="description">
+            {{ 'student.description' | translate }}
+            <p-sortIcon field="description"></p-sortIcon>
+          </th>
+          <th pSortableColumn="registrationDate">
+            {{ 'student.registrationDate' | translate }}
+            <p-sortIcon field="registrationDate"></p-sortIcon>
+          </th>
+          <th style="width: 120px; text-align: right">{{ 'common.actions' | translate }}</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-student>
+        <tr>
+          <td>{{ student.name }}</td>
+          <td>{{ student.phone }}</td>
+          <td>{{ student.email }}</td>
+          <td>{{ student.description }}</td>
+          <td>{{ student.registrationDate }}</td>
+          <td style="text-align: right">
+            <div class="action-buttons">
+              <p-button 
+                icon="pi pi-pencil" 
+                severity="info" 
+                size="small"
+                [text]="true"
+                [pTooltip]="'common.edit' | translate"
+                (onClick)="edit(student)">
+              </p-button>
+              <p-button 
+                icon="pi pi-trash" 
+                severity="danger" 
+                [text]="true"
+                size="small"
+                [pTooltip]="'common.delete' | translate"
+                (onClick)="confirmDelete(student)">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="loadingbody">
+        <tr *ngFor="let item of [1,2,3,4,5]">
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td style="text-align: right">
+            <div class="action-buttons">
+              <div class="skeleton-button"></div>
+              <div class="skeleton-button"></div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="6" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-list empty-icon"></i>
+              <p>{{ 'student.default.empty' | translate }}</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Dialog para criar/editar student -->
+  <p-dialog 
+    [header]="isEditing ? ('student.default.edit' | translate) : ('student.default.new' | translate)"
+    [(visible)]="displayDialog" 
+    [modal]="true" 
+    [style]="{width: '450px'}"
+    [draggable]="false"
+    [resizable]="false">
+    
+    <div class="dialog-content">
+      <form [formGroup]="studentForm">
+        <!-- Tabela Normal: Campos regulares -->
+        <div class="field">
+          <label for="name">{{ 'student.name' | translate }} *</label>
+          <input 
+            id="name"
+            type="text" 
+            pInputText 
+            formControlName="name"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="studentForm.get('name')?.invalid && studentForm.get('name')?.touched" class="input-error">
+            <small *ngIf="studentForm.get('name')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="studentForm.get('name')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="phone">{{ 'student.phone' | translate }} *</label>
+          <input 
+            id="phone"
+            type="text" 
+            pInputText 
+            formControlName="phone"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="studentForm.get('phone')?.invalid && studentForm.get('phone')?.touched" class="input-error">
+            <small *ngIf="studentForm.get('phone')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="studentForm.get('phone')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="email">{{ 'student.email' | translate }} *</label>
+          <input 
+            id="email"
+            type="text" 
+            pInputText 
+            formControlName="email"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="studentForm.get('email')?.invalid && studentForm.get('email')?.touched" class="input-error">
+            <small *ngIf="studentForm.get('email')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="studentForm.get('email')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="description">{{ 'student.description' | translate }} *</label>
+          <input 
+            id="description"
+            type="text" 
+            pInputText 
+            formControlName="description"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="studentForm.get('description')?.invalid && studentForm.get('description')?.touched" class="input-error">
+            <small *ngIf="studentForm.get('description')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="studentForm.get('description')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="registrationDate">{{ 'student.registrationDate' | translate }}</label>
+          <input 
+            id="registrationDate"
+            type="text" 
+            pInputText 
+            formControlName="registrationDate"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="studentForm.get('registrationDate')?.invalid && studentForm.get('registrationDate')?.touched" class="input-error">
+            <small *ngIf="studentForm.get('registrationDate')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        
+        <!-- Relacionamentos Many-to-Many (apenas o lado pai da relação) -->
+      </form>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="dialog-footer">
+        <p-button 
+          [label]="'common.cancel' | translate"
+          icon="pi pi-times" 
+          variant="outlined"
+          (onClick)="closeDialog()">
+        </p-button>
+        <p-button 
+          [label]="'common.save' | translate"
+          icon="pi pi-check" 
+          (onClick)="save()"
+          [loading]="loading"
+          [disabled]="studentForm.invalid">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+<!-- Toast para mensagens -->
+<p-toast></p-toast>
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>

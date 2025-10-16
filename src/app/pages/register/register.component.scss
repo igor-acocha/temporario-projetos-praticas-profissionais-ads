@@ -1,0 +1,54 @@
+// Importa todos os estilos da página de login para reaproveitamento
+@use '../login/login.component.scss';
+
+/* =================================== */
+/* REGISTER-SPECIFIC STYLES */
+/* =================================== */
+
+.profile-selector {
+  margin-bottom: 2rem;
+
+  .p-selectbutton .p-button {
+    flex: 1; // Faz os botões ocuparem o mesmo espaço
+    justify-content: center;
+  }
+
+  // Estilo para o botão que NÃO está selecionado
+  :deep(.p-selectbutton .p-button:not(.p-highlight)) {
+    background: var(--surface-b);
+    border-color: var(--surface-d);
+    color: var(--text-color-secondary);
+    
+    &:hover {
+      background: var(--surface-c);
+    }
+  }
+  
+  // Estilo para o botão que ESTÁ selecionado
+  :deep(.p-selectbutton .p-button.p-highlight) {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--primary-color-text);
+  }
+}
+
+// Pequeno ajuste para o link de login na tela de cadastro
+.form-actions {
+  .login-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--text-color-secondary);
+
+    a {
+      font-weight: 600;
+      color: var(--primary-color);
+      text-decoration: none;
+      margin-left: 0.5rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

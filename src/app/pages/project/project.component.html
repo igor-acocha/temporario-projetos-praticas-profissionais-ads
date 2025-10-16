@@ -1,0 +1,247 @@
+<div class="project-container" [@pageAnimation]>
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <h2>{{ 'project.default.title' | translate }}</h2>
+        <p class="card-subtitle">{{ 'project.default.description' | translate }}</p>
+      </div>
+    </ng-template>
+
+    <p-toolbar styleClass="mb-4">
+      <ng-template pTemplate="left">
+        <p-button 
+          [label]="'project.default.new' | translate"
+          icon="pi pi-plus" 
+          (onClick)="newProject()">
+        </p-button>
+      </ng-template>
+      
+      <ng-template pTemplate="center">
+        <div class="search-container">
+            <p-iconfield>
+                <p-inputicon class="pi pi-search" />
+                <input type="text" pInputText 
+                  [placeholder]="'common.search' | translate" 
+                  [(ngModel)]="searchTerm" 
+                  (ngModelChange)="onSearch()" />
+            </p-iconfield>
+        </div>
+      </ng-template>
+    </p-toolbar>
+
+    <p-table 
+      [value]="filteredProjects" 
+      [loading]="loading"
+      [scrollable]="true"
+      scrollHeight="350px"
+      styleClass="p-datatable-striped"
+      [sortField]="sortField"
+      [sortOrder]="sortOrder"
+      (onSort)="onSort($event)"
+      [paginator]="true"
+      [rows]="rowsPerPage"
+      [totalRecords]="filteredProjects.length"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="{first} - {last} de {totalRecords} registros">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="title">
+            {{ 'project.title' | translate }}
+            <p-sortIcon field="title"></p-sortIcon>
+          </th>
+          <th pSortableColumn="description">
+            {{ 'project.description' | translate }}
+            <p-sortIcon field="description"></p-sortIcon>
+          </th>
+          <th pSortableColumn="status">
+            {{ 'project.status' | translate }}
+            <p-sortIcon field="status"></p-sortIcon>
+          </th>
+          <th pSortableColumn="creationDate">
+            {{ 'project.creationDate' | translate }}
+            <p-sortIcon field="creationDate"></p-sortIcon>
+          </th>
+          <th style="width: 120px; text-align: right">{{ 'common.actions' | translate }}</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-project>
+        <tr>
+          <td>{{ project.title }}</td>
+          <td>{{ project.description }}</td>
+          <td>{{ project.status }}</td>
+          <td>{{ project.creationDate }}</td>
+          <td style="text-align: right">
+            <div class="action-buttons">
+              <p-button 
+                icon="pi pi-pencil" 
+                severity="info" 
+                size="small"
+                [text]="true"
+                [pTooltip]="'common.edit' | translate"
+                (onClick)="edit(project)">
+              </p-button>
+              <p-button 
+                icon="pi pi-trash" 
+                severity="danger" 
+                [text]="true"
+                size="small"
+                [pTooltip]="'common.delete' | translate"
+                (onClick)="confirmDelete(project)">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="loadingbody">
+        <tr *ngFor="let item of [1,2,3,4,5]">
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td>
+            <div class="skeleton-text"></div>
+          </td>
+          <td style="text-align: right">
+            <div class="action-buttons">
+              <div class="skeleton-button"></div>
+              <div class="skeleton-button"></div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="5" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-list empty-icon"></i>
+              <p>{{ 'project.default.empty' | translate }}</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Dialog para criar/editar project -->
+  <p-dialog 
+    [header]="isEditing ? ('project.default.edit' | translate) : ('project.default.new' | translate)"
+    [(visible)]="displayDialog" 
+    [modal]="true" 
+    [style]="{width: '450px'}"
+    [draggable]="false"
+    [resizable]="false">
+    
+    <div class="dialog-content">
+      <form [formGroup]="projectForm">
+        <!-- Tabela Normal: Campos regulares -->
+        <div class="field">
+          <label for="title">{{ 'project.title' | translate }} *</label>
+          <input 
+            id="title"
+            type="text" 
+            pInputText 
+            formControlName="title"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="projectForm.get('title')?.invalid && projectForm.get('title')?.touched" class="input-error">
+            <small *ngIf="projectForm.get('title')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="projectForm.get('title')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="description">{{ 'project.description' | translate }} *</label>
+          <input 
+            id="description"
+            type="text" 
+            pInputText 
+            formControlName="description"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="projectForm.get('description')?.invalid && projectForm.get('description')?.touched" class="input-error">
+            <small *ngIf="projectForm.get('description')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="projectForm.get('description')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="status">{{ 'project.status' | translate }} *</label>
+          <input 
+            id="status"
+            type="text" 
+            pInputText 
+            formControlName="status"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="projectForm.get('status')?.invalid && projectForm.get('status')?.touched" class="input-error">
+            <small *ngIf="projectForm.get('status')?.hasError('notBlank')">{{ 'common.inputRequired' | translate }}</small>
+            <small *ngIf="projectForm.get('status')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="creationDate">{{ 'project.creationDate' | translate }}</label>
+          <input 
+            id="creationDate"
+            type="text" 
+            pInputText 
+            formControlName="creationDate"
+            class="w-full"
+            [placeholder]="'common.enterText' | translate" />
+          <div *ngIf="projectForm.get('creationDate')?.invalid && projectForm.get('creationDate')?.touched" class="input-error">
+            <small *ngIf="projectForm.get('creationDate')?.hasError('maxlength')">{{ 'common.maxLengthError' | translate }}</small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="idEntrepreneur">{{ 'project.idEntrepreneur' | translate }} *</label>
+          <!-- FK Simples -->
+          <p-select 
+            id="entrepreneur"
+            formControlName="entrepreneur"
+            [options]="fkEntrepreneurOptions"
+            optionLabel="label"
+            optionValue="value"
+            appendTo="body"
+            class="w-full"
+            [showClear]="true"
+            [placeholder]="'common.selectOption' | translate">
+          </p-select>
+          <div *ngIf="projectForm.get('entrepreneur')?.invalid && projectForm.get('entrepreneur')?.touched" class="input-error">
+            <small>{{ 'common.inputRequired' | translate }}</small>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="dialog-footer">
+        <p-button 
+          [label]="'common.cancel' | translate"
+          icon="pi pi-times" 
+          variant="outlined"
+          (onClick)="closeDialog()">
+        </p-button>
+        <p-button 
+          [label]="'common.save' | translate"
+          icon="pi pi-check" 
+          (onClick)="save()"
+          [loading]="loading"
+          [disabled]="projectForm.invalid">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+<!-- Toast para mensagens -->
+<p-toast></p-toast>
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>

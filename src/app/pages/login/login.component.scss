@@ -1,0 +1,134 @@
+/* ============================ */
+/* LAYOUT GERAL DO LOGIN        */
+/* ============================ */
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: var(--surface-ground);
+  padding: 2rem;
+}
+
+.login-card {
+  width: 560px;
+  border-radius: 1.5rem !important;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* Cabeçalho do card */
+.card-header {
+  text-align: center;
+  padding: 2rem 1rem 1rem;
+
+  .logo {
+    width: 90px;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 0.25rem;
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: var(--text-color-secondary);
+    margin: 0;
+  }
+}
+
+/* ============================ */
+/* FORMULÁRIO                   */
+/* ============================ */
+
+form {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  .field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+  }
+
+  input[pInputText] {
+    padding: 0.8rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--surface-border);
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.1rem var(--primary-color-light);
+    }
+  }
+
+  .input-error {
+    color: #d32f2f;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+}
+
+/* ============================ */
+/* RODAPÉ DO CARD (BOTÃO, LINKS)*/
+/* ============================ */
+
+:host ::ng-deep .p-card-footer {
+  padding: 1.5rem;
+}
+
+p-message {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+button[pButton] {
+  width: 100%;
+  border-radius: 2rem !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  padding: 0.9rem 0 !important;
+  background: var(--primary-color) !important;
+  border: none !important;
+
+  &:hover:not(:disabled) {
+    background: var(--primary-color-hover) !important;
+  }
+}
+
+/* Link de cadastro */
+.mt-4 {
+  margin-top: 1.5rem;
+  text-align: center;
+
+  span {
+    color: var(--text-color-secondary);
+  }
+
+  a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 0.25rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

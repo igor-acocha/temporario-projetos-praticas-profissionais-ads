@@ -1,0 +1,60 @@
+<p-toast></p-toast>
+<div class="register-container" [@pageAnimation]>
+  <p-card styleClass="register-card shadow-5">
+    <ng-template pTemplate="header">
+      <div class="card-header">
+        <img src="assets/images/logo.png" alt="Logo" class="logo" />
+        <h2>Crie sua conta</h2>
+        <p>É rápido e fácil.</p>
+      </div>
+    </ng-template>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="p-fluid">
+        <div class="field">
+          <label for="name">Nome Completo</label>
+          <input id="name" type="text" pInputText formControlName="name" />
+        </div>
+
+        <div class="field">
+          <label for="cpfCnpj">CPF ou CNPJ</label>
+          <input id="cpfCnpj" type="text" pInputText formControlName="cpfCnpj" />
+        </div>
+
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" type="email" pInputText formControlName="email" />
+        </div>
+
+        <div class="field">
+          <label for="password">Senha</label>
+          <input id="password" type="password" pInputText formControlName="password" />
+        </div>
+
+        <div class="field">
+          <label for="typeProfile">Tipo de Perfil</label>
+          <p-dropdown id="typeProfile" [options]="profileTypes" formControlName="typeProfile" placeholder="Selecione seu perfil"></p-dropdown>
+        </div>
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <p-message *ngIf="errorMessage" severity="error" [text]="errorMessage" styleClass="w-full mb-3"></p-message>
+
+      <button pButton 
+              type="submit" 
+              label="Cadastrar"
+              [loading]="isSubmitting"
+              [disabled]="registerForm.invalid || isSubmitting"
+              (click)="onSubmit()"
+              class="w-full">
+      </button>
+
+      <div class="mt-4 text-center">
+        <span>Já tem uma conta? </span>
+        <a routerLink="/login">Faça login</a>
+      </div>
+    </ng-template>
+  </p-card>
+</div>
+<p-toast></p-toast>
