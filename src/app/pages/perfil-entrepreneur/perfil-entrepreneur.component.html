@@ -1,0 +1,73 @@
+<header class="header">
+  <div class="container">
+    <img class="logo" src="assets/images/logo.jpg" alt="TechStart Logo" />
+    <div class="actions">
+      <button pButton label="Login" class="p-button-text" (click)="goToLogin()"></button>
+      <button pButton label="Registrar" class="p-button-rounded btnRegistrar" (click)="goToRegister()"></button>
+    </div>
+  </div>
+</header>
+
+<section class="perfil-entrepreneur">
+  <div class="container">
+    <p-card class="empresa-card">
+      <ng-template pTemplate="header">
+        <div class="card-header">
+          <div class="logo-circle">LOGO</div>
+          <div class="empresa-info">
+            <h2>{{ entrepreneur?.companyName || 'Texto Nome Empresa' }}</h2>
+            <div class="meta">
+              <span>{{ entrepreneur?.foundedYear ? ('Ano de fundação: ' + entrepreneur?.foundedYear) : 'Texto ano fundado' }}</span>
+              <span> • </span>
+              <span>{{ entrepreneur?.city && entrepreneur?.state ? ('Localização: ' + entrepreneur?.city + ' - ' + entrepreneur?.state) : 'Texto cidade e estado empresa' }}</span>
+            </div>
+          </div>
+          <div class="avaliacao">
+            <div class="stars">
+              <i class="pi pi-star-fill star"></i>
+              <i class="pi pi-star-fill star"></i>
+              <i class="pi pi-star-fill star"></i>
+              <i class="pi pi-star"></i>
+              <i class="pi pi-star"></i>
+            </div>
+            <small class="ratings-count">{{ ratingsCount }} avaliações</small>
+          </div>
+        </div>
+      </ng-template>
+
+      <div class="conteudo">
+        <div class="secao">
+          <h3>Atuação da Empresa</h3>
+          <p>{{ entrepreneur?.description || 'Texto descritivo de atividades da empresa' }}</p>
+        </div>
+
+        <div class="secao">
+          <h3>Dados cadastrais</h3>
+          <ul>
+            <li><strong>E-mail:</strong> {{ entrepreneur?.email || 'texto email@email.com' }}</li>
+            <li><strong>Telefone:</strong> {{ entrepreneur?.phone || 'texto telefone de contato empresa' }}</li>
+            <li><strong>Setor:</strong> {{ entrepreneur?.segment || 'texto setor empresa' }}</li>
+            <li><strong>Funcionários:</strong> {{ entrepreneur?.employees || 'texto qtd funcionarios' }}</li>
+            <li><strong>Razão Social:</strong> {{ entrepreneur?.taxId || 'texto razao social' }}</li>
+          </ul>
+        </div>
+      </div>
+    </p-card>
+
+    <div class="hero-actions">
+      <button pButton label="Voltar" class="p-button-rounded btnRegistrar" (click)="goBack()"></button>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <img class="logo" src="assets/images/logo.jpg" alt="TechStart Logo" />
+    <nav class="footer-nav">
+      <a href="#">Sobre</a>
+      <a href="#">Contato</a>
+      <a href="#">Privacidade</a>
+    </nav>
+  </div>
+  <p>&copy; {{ currentYear }} TechStart. Todos os direitos reservados.</p>
+</footer>

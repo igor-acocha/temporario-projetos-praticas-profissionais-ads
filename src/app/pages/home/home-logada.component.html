@@ -1,0 +1,306 @@
+<div class="home-container" [@pageAnimation]>
+  <!-- Hero Banner -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <div class="homepage" [@pageAnimation]>
+        <!-- Header simples com logo e navegação -->
+        <header class="hp-header">
+          <div class="hp-header__left">
+            <img src="assets/images/logo.jpg" alt="TechStart" class="hp-logo" />
+          </div>
+          <nav class="hp-header__nav">
+            <a routerLink="/home">Home</a>
+            <a routerLink="/project">Projetos</a>
+            <a routerLink="/student">Estudantes</a>
+            <a routerLink="/entrepreneur">Empresários</a>
+          </nav>
+          <div class="hp-header__actions">
+            <p-button label="Login" styleClass="p-button-text" (onClick)="goToLogin()"></p-button>
+            <p-button label="Registrar" (onClick)="goToRegister()"></p-button>
+          </div>
+        </header>
+      
+        <!-- Hero com slogan e botões -->
+        <section class="hp-hero">
+          <div class="hp-hero__content">
+            <h1 class="hp-hero__title">Conecte talentos e oportunidades</h1>
+            <p class="hp-hero__subtitle">Plataforma que aproxima estudantes e empresas para acelerar projetos reais.</p>
+            <div class="hp-hero__cta">
+              <p-button label="Sou Estudante" styleClass="p-button-secondary"></p-button>
+              <p-button label="Sou Empresário" styleClass="p-button-outlined"></p-button>
+            </div>
+          </div>
+          <div class="hp-hero__bg"></div>
+        </section>
+      
+        <!-- Título da plataforma -->
+        <section class="hp-section hp-platform">
+          <div class="hp-section__container">
+            <h2>Título da Plataforma</h2>
+            <p>Texto de resumo sobre a plataforma.</p>
+            <div class="hp-cards">
+              <div class="hp-card">
+                <div class="hp-card__icon"></div>
+                <h3>Bloco</h3>
+                <p>Texto breve sobre o bloco</p>
+              </div>
+              <div class="hp-card">
+                <div class="hp-card__icon"></div>
+                <h3>Bloco</h3>
+                <p>Texto breve sobre o bloco</p>
+              </div>
+              <div class="hp-card">
+                <div class="hp-card__icon"></div>
+                <h3>Bloco</h3>
+                <p>Texto breve sobre o bloco</p>
+              </div>
+              <div class="hp-card">
+                <div class="hp-card__icon"></div>
+                <h3>Bloco</h3>
+                <p>Texto breve sobre o bloco</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      
+        <!-- Benefícios Empresários -->
+        <section class="hp-section hp-benefits">
+          <div class="hp-section__container">
+            <h2>Benefícios para Empresários</h2>
+            <p>Texto de resumo para empresários.</p>
+            <div class="hp-cards hp-cards--4">
+              <div class="hp-card"><div class="hp-card__thumb"></div><h3>Título</h3><p>Texto breve</p></div>
+              <div class="hp-card"><div class="hp-card__thumb"></div><h3>Título</h3><p>Texto breve</p></div>
+              <div class="hp-card"><div class="hp-card__thumb"></div><h3>Título</h3><p>Texto breve</p></div>
+              <div class="hp-card"><div class="hp-card__thumb"></div><h3>Título</h3><p>Texto breve</p></div>
+            </div>
+          </div>
+        </section>
+      
+        <!-- Benefícios Estudantes -->
+        <section class="hp-section hp-benefits alt">
+          <div class="hp-section__container">
+            <h2>Benefícios para Estudantes</h2>
+            <p>Texto de resumo para estudantes.</p>
+            <div class="hp-cards hp-cards--4">
+              <div class="hp-card"><div class="hp-card__thumb"></div><h3>Título</h3><p>Texto breve</p></div>
+              <div class="hp-card"><div class="hp-card__thumb"></div><h3>Título</h3><p>Texto breve</p></div>
+              <div class="hp-card"><div class="hp-card__thumb"></div><h3>Título</h3><p>Texto breve</p></div>
+              <div class="hp-card"><div class="hp-card__thumb"></div><h3>Título</h3><p>Texto breve</p></div>
+            </div>
+          </div>
+        </section>
+      
+        <!-- Junte-se a nós -->
+        <section class="hp-section hp-join">
+          <div class="hp-section__container">
+            <h2>Junte-se a nós</h2>
+            <p>Texto descritivo breve sobre a chamada para ação.</p>
+            <div class="hp-join__cta">
+              <p-button label="Quero participar" (onClick)="goToRegister()"></p-button>
+            </div>
+          </div>
+        </section>
+      
+        <!-- Rodapé simples -->
+        <footer class="hp-footer">
+          <div class="hp-footer__inner">
+            <img src="assets/images/logo.jpg" alt="TechStart" class="hp-logo small" />
+            <nav class="hp-footer__nav">
+              <a>Termos</a>
+              <a>Privacidade</a>
+              <a>Contato</a>
+            </nav>
+            <div class="hp-footer__social">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div>
+          </div>
+          <div class="hp-footer__copy">Todos os direitos reservados</div>
+        </footer>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-image">
+          <i class="pi pi-code hero-icon"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack Section -->
+  <section class="tech-stack-section">
+    <div class="section-container">
+      <h2 class="section-title">{{ "home.techStack.title" | translate }}</h2>
+      <p class="section-subtitle">
+        {{ "home.techStack.description" | translate }}
+      </p>
+
+      <div class="tech-grid">
+        <div class="tech-card">
+          <div class="tech-icon angular">
+            <i class="pi pi-android"></i>
+          </div>
+          <h3>Angular 19</h3>
+          <p>{{ "home.techStack.angular" | translate }}</p>
+        </div>
+
+        <div class="tech-card">
+          <div class="tech-icon primeng">
+            <i class="pi pi-palette"></i>
+          </div>
+          <h3>PrimeNG</h3>
+          <p>{{ "home.techStack.primeng" | translate }}</p>
+        </div>
+
+        <div class="tech-card">
+          <div class="tech-icon typescript">
+            <i class="pi pi-code"></i>
+          </div>
+          <h3>TypeScript</h3>
+          <p>{{ "home.techStack.typescript" | translate }}</p>
+        </div>
+
+        <div class="tech-card">
+          <div class="tech-icon scss">
+            <i class="pi pi-sparkles"></i>
+          </div>
+          <h3>SCSS</h3>
+          <p>{{ "home.techStack.scss" | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Theme Customization Section -->
+  <section class="theme-section">
+    <div class="section-container">
+      <h2 class="section-title">{{ "home.themes.title" | translate }}</h2>
+      <p class="section-subtitle">
+        {{ "home.themes.description" | translate }}
+      </p>
+
+      <div class="theme-demo">
+        <div class="theme-controls">
+          <h3>{{ "home.themes.customize" | translate }}</h3>
+          <div class="color-palette">
+            <div class="color-group">
+              <label>{{ "home.themes.primaryColor" | translate }}</label>
+              <div class="color-options">
+                <button
+                  class="color-btn red active"
+                  (click)="changeTheme('red')"
+                  [title]="'Red Theme'"
+                ></button>
+                <button
+                  class="color-btn blue"
+                  (click)="changeTheme('blue')"
+                  [title]="'Blue Theme'"
+                ></button>
+                <button
+                  class="color-btn green"
+                  (click)="changeTheme('green')"
+                  [title]="'Green Theme'"
+                ></button>
+                <button
+                  class="color-btn purple"
+                  (click)="changeTheme('purple')"
+                  [title]="'Purple Theme'"
+                ></button>
+              </div>
+            </div>
+
+            <div class="theme-toggle">
+              <label>{{ "home.themes.darkMode" | translate }}</label>
+              <p-inputSwitch
+                [(ngModel)]="isDarkMode"
+                (onChange)="toggleDarkMode()"
+              >
+              </p-inputSwitch>
+            </div>
+          </div>
+        </div>
+
+        <div class="theme-preview">
+          <h3>{{ "home.themes.preview" | translate }}</h3>
+          <div class="preview-components">
+            <p-button [label]="'Button'" icon="pi pi-check"> </p-button>
+            <input
+              type="text"
+              pInputText
+              placeholder="Input Text"
+              styleClass="preview-input"
+            />
+            <p-card styleClass="preview-card">
+              <p>{{ "home.themes.sampleCard" | translate }}</p>
+            </p-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="section-container">
+      <h2 class="section-title">{{ "home.features.title" | translate }}</h2>
+      <p class="section-subtitle">
+        {{ "home.features.description" | translate }}
+      </p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-shield"></i>
+          </div>
+          <h3>{{ "home.features.authentication.title" | translate }}</h3>
+          <p>{{ "home.features.authentication.description" | translate }}</p>
+          <ul class="feature-list">
+            <li>Microsoft Azure Entra ID</li>
+            <li>MSAL Integration</li>
+            <li>{{ "home.features.authentication.security" | translate }}</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-globe"></i>
+          </div>
+          <h3>{{ "home.features.i18n.title" | translate }}</h3>
+          <p>{{ "home.features.i18n.description" | translate }}</p>
+          <ul class="feature-list">
+            <li>{{ "home.features.i18n.multiLanguage" | translate }}</li>
+            <li>{{ "home.features.i18n.dynamic" | translate }}</li>
+            <li>{{ "home.features.i18n.languages" | translate }}</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-mobile"></i>
+          </div>
+          <h3>{{ "home.features.responsive.title" | translate }}</h3>
+          <p>{{ "home.features.responsive.description" | translate }}</p>
+          <ul class="feature-list">
+            <li>{{ "home.features.responsive.mobile" | translate }}</li>
+            <li>{{ "home.features.responsive.tablet" | translate }}</li>
+            <li>{{ "home.features.responsive.desktop" | translate }}</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="pi pi-cog"></i>
+          </div>
+          <h3>{{ "home.features.architecture.title" | translate }}</h3>
+          <p>{{ "home.features.architecture.description" | translate }}</p>
+          <ul class="feature-list">
+            <li>{{ "home.features.architecture.modular" | translate }}</li>
+            <li>{{ "home.features.architecture.services" | translate }}</li>
+            <li>{{ "home.features.architecture.guards" | translate }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

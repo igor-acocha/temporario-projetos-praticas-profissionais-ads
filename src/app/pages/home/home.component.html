@@ -1,223 +1,203 @@
-<div class="home-container" [@pageAnimation]>
-  <!-- Hero Banner -->
-  <section class="hero-banner">
-    <div class="hero-content">
-      <div class="hero-text">
-        <h1 class="hero-title">
-          {{ "home.welcome" | translate }}
-          <span class="highlight">{{ "project.name" | translate }}</span>
-        </h1>
-        <p class="hero-subtitle">
-          {{ "home.subtitle" | translate }}
+<header class="header">
+  <div class="container">
+    <img class="logo" src="assets/images/logo.jpg" alt="TechStart Logo" />
+    <nav class="nav">
+      <a routerLink="/home" routerLinkActive="active">Início</a>
+      <a [routerLink]="['/home']" fragment="solucoes">Soluções</a>
+      <a [routerLink]="['/home']" fragment="empresas">Empresas</a>
+      <a [routerLink]="['/home']" fragment="estudantes">Estudantes</a>
+    </nav>
+    <div class="actions">
+      <button
+        pButton
+        label="Login"
+        class="p-button-text"
+        (click)="goToLogin()"
+      ></button>
+      <button
+        pButton
+        label="Registrar"
+        class="p-button-rounded btnRegistrar"
+        (click)="goToRegister()"
+      ></button>
+    </div>
+  </div>
+</header>
+
+<section class="hero slogan">
+  <div class="container">
+    <h1>TechStart: Onde desenvolvedores e empresas se encontram</h1>
+    <p>
+      Conectando talentos e oportunidades para criação de soluções tecnologicas
+      e acessíveis
+    </p>
+    <div class="hero-actions">
+      <button
+        pButton
+        label="Começar"
+        class="p-button-rounded btnComecar"
+      ></button>
+    </div>
+  </div>
+</section>
+
+<section class="features solucoes" id="solucoes">
+  <div class="container">
+    <h1>Soluções</h1>
+    <p>
+      Na <b>TechStart</b>, conectamos talentos em tecnologia a empresas que
+      precisam de soluções inovadoras, rápidas e acessíveis. Seja você um
+      estudante buscando colocar suas habilidades em prática ou um profissional
+      autônomo querendo expandir seu portfólio, aqui você encontra oportunidades
+      reais de crescimento e aprendizado.
+    </p>
+
+    <div class="cards cardsHome">
+      <div class="card">
+        <div class="icon"><i class="pi pi-bolt"></i></div>
+        <h3>Conexão Inteligente</h3>
+        <p>
+          Um sistema que conecta empresas a profissionais e alunos
+          desenvolvedores com base nas habilidades necessárias.
         </p>
-        <div class="hero-actions">
-          <p-button
-            label="Angular 19"
-            icon="pi pi-external-link"
-            styleClass="hero-btn doc"
-            size="large"
-            (onClick)="redirectToDoc('angular')"
-          >
-          </p-button>
-          <p-button
-            label="PrimeNG"
-            icon="pi pi-external-link"
-            styleClass="hero-btn doc"
-            size="large"
-            (onClick)="redirectToDoc('primeng')"
-          >
-          </p-button>
-          <p-button
-            label="PrimeFlex"
-            icon="pi pi-external-link"
-            styleClass="hero-btn doc"
-            size="large"
-            (onClick)="redirectToDoc('primeflex')"
-          >
-          </p-button>
-        </div>
       </div>
-      <div class="hero-visual">
-        <div class="hero-image">
-          <i class="pi pi-code hero-icon"></i>
-        </div>
+      <div class="card">
+        <div class="icon"><i class="pi pi-chart-bar"></i></div>
+        <h3>Gestão de Projetos</h3>
+        <p>
+          Ferramentas integradas para acompanhar o progresso de projetos e
+          aceite de propostas.
+        </p>
+      </div>
+      <div class="card">
+        <div class="icon"><i class="pi pi-star"></i></div>
+        <h3>Avaliação de Usuários</h3>
+        <p>
+          Segurança e promoção com base nas experiências entre empresas e devs,
+          assegurando maior clareza das partes.
+        </p>
+      </div>
+      <div class="card">
+        <div class="icon"><i class="pi pi-money-bill"></i></div>
+        <h3>Valor Competitivo</h3>
+        <p>
+          Liberdade para realizar a negociação de valores entre empresas e
+          profissionais, permitindo o melhor acordo e alcance da relação custo x
+          benefício.
+        </p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Tech Stack Section -->
-  <section class="tech-stack-section">
-    <div class="section-container">
-      <h2 class="section-title">{{ "home.techStack.title" | translate }}</h2>
-      <p class="section-subtitle">
-        {{ "home.techStack.description" | translate }}
-      </p>
-
-      <div class="tech-grid">
-        <div class="tech-card">
-          <div class="tech-icon angular">
-            <i class="pi pi-android"></i>
-          </div>
-          <h3>Angular 19</h3>
-          <p>{{ "home.techStack.angular" | translate }}</p>
-        </div>
-
-        <div class="tech-card">
-          <div class="tech-icon primeng">
-            <i class="pi pi-palette"></i>
-          </div>
-          <h3>PrimeNG</h3>
-          <p>{{ "home.techStack.primeng" | translate }}</p>
-        </div>
-
-        <div class="tech-card">
-          <div class="tech-icon typescript">
-            <i class="pi pi-code"></i>
-          </div>
-          <h3>TypeScript</h3>
-          <p>{{ "home.techStack.typescript" | translate }}</p>
-        </div>
-
-        <div class="tech-card">
-          <div class="tech-icon scss">
-            <i class="pi pi-sparkles"></i>
-          </div>
-          <h3>SCSS</h3>
-          <p>{{ "home.techStack.scss" | translate }}</p>
-        </div>
+<section class="benefits entrepreneurs paraEmpresas" id="empresas">
+  <div class="container">
+    <h1>Para Empresas</h1>
+    <p>
+      Para empresas, oferecemos acesso a uma rede de profissionais qualificados,
+      permitindo que seus projetos saiam do papel com eficiência e custo
+      reduzido. Para estudantes e desenvolvedores, garantimos experiências
+      práticas, aprendizado constante e remuneração justa.
+    </p>
+    <div class="cards cardsHome">
+      <div class="card">
+        <h3>Agilidade na busca por talentos</h3>
+        <p>
+          Conecte-se com desenvolvedores e estudantes preparados para atuar em
+          projetos de tecnologia de forma ágil.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Custos Reduzidos</h3>
+        <p>
+          Contrate profissionais autônomos para soluções específicas sem
+          precisar de grandes investimentos em equipe interna.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Flexibilidade na Contratação</h3>
+        <p>
+          Escolha entre projetos pontuais, por hora ou milestones, adaptando-se
+          às necessidades e prazos da empresa.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Transparência e Gerenciamento</h3>
+        <p>
+          Monitore o progresso dos projetos e entregas através da plataforma,
+          garantindo qualidade e prazos cumpridos.
+        </p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Theme Customization Section -->
-  <section class="theme-section">
-    <div class="section-container">
-      <h2 class="section-title">{{ "home.themes.title" | translate }}</h2>
-      <p class="section-subtitle">
-        {{ "home.themes.description" | translate }}
-      </p>
-
-      <div class="theme-demo">
-        <div class="theme-controls">
-          <h3>{{ "home.themes.customize" | translate }}</h3>
-          <div class="color-palette">
-            <div class="color-group">
-              <label>{{ "home.themes.primaryColor" | translate }}</label>
-              <div class="color-options">
-                <button
-                  class="color-btn red active"
-                  (click)="changeTheme('red')"
-                  [title]="'Red Theme'"
-                ></button>
-                <button
-                  class="color-btn blue"
-                  (click)="changeTheme('blue')"
-                  [title]="'Blue Theme'"
-                ></button>
-                <button
-                  class="color-btn green"
-                  (click)="changeTheme('green')"
-                  [title]="'Green Theme'"
-                ></button>
-                <button
-                  class="color-btn purple"
-                  (click)="changeTheme('purple')"
-                  [title]="'Purple Theme'"
-                ></button>
-              </div>
-            </div>
-
-            <div class="theme-toggle">
-              <label>{{ "home.themes.darkMode" | translate }}</label>
-              <p-inputSwitch
-                [(ngModel)]="isDarkMode"
-                (onChange)="toggleDarkMode()"
-              >
-              </p-inputSwitch>
-            </div>
-          </div>
-        </div>
-
-        <div class="theme-preview">
-          <h3>{{ "home.themes.preview" | translate }}</h3>
-          <div class="preview-components">
-            <p-button [label]="'Button'" icon="pi pi-check"> </p-button>
-            <input
-              type="text"
-              pInputText
-              placeholder="Input Text"
-              styleClass="preview-input"
-            />
-            <p-card styleClass="preview-card">
-              <p>{{ "home.themes.sampleCard" | translate }}</p>
-            </p-card>
-          </div>
-        </div>
+<section class="benefits students paraEstudantes" id="estudantes">
+  <div class="container">
+    <h1>Para Estudantes</h1>
+    <p>
+      Oferecemos a possibilidade de aumentar sua experiência e se destacar no
+      mercado diante de projetos pontuais as mais diversas empresas existentes
+      no mercado. Com isso você poderá construir um portifólio ainda melhor e
+      recebendo por isso!
+    </p>
+    <div class="cards cardsHome">
+      <div class="card">
+        <h3>Oportunidades</h3>
+        <p>
+          Acesse projetos de empresas que precisam de soluções tecnológicas e
+          ganhe experiência prática.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Flexibilidade</h3>
+        <p>
+          Trabalhe remotamente, escolha projetos que se encaixem na sua agenda e
+          defina seu próprio ritmo.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Remuneração</h3>
+        <p>
+          Receba pagamentos seguros e claros, com controle total sobre o que
+          você vai cobrar por cada trabalho realizado.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Networking</h3>
+        <p>
+          Construa relacionamentos valiosos com empresas e outros
+          desenvolvedores, abrindo portas para futuras oportunidades e
+          colaborações.
+        </p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Features Section -->
-  <section class="features-section">
-    <div class="section-container">
-      <h2 class="section-title">{{ "home.features.title" | translate }}</h2>
-      <p class="section-subtitle">
-        {{ "home.features.description" | translate }}
-      </p>
+<section class="cta">
+  <div class="container">
+    <h2>Junte-se a nós</h2>
+    <p>
+      Junte-se à comunidade TechStart e transforme ideias em soluções de
+      tecnologia!
+    </p>
+    <button
+      pButton
+      label="Começar"
+      class="p-button-rounded btnComecar"
+    ></button>
+  </div>
+</section>
 
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="pi pi-shield"></i>
-          </div>
-          <h3>{{ "home.features.authentication.title" | translate }}</h3>
-          <p>{{ "home.features.authentication.description" | translate }}</p>
-          <ul class="feature-list">
-            <li>Microsoft Azure Entra ID</li>
-            <li>MSAL Integration</li>
-            <li>{{ "home.features.authentication.security" | translate }}</li>
-          </ul>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="pi pi-globe"></i>
-          </div>
-          <h3>{{ "home.features.i18n.title" | translate }}</h3>
-          <p>{{ "home.features.i18n.description" | translate }}</p>
-          <ul class="feature-list">
-            <li>{{ "home.features.i18n.multiLanguage" | translate }}</li>
-            <li>{{ "home.features.i18n.dynamic" | translate }}</li>
-            <li>{{ "home.features.i18n.languages" | translate }}</li>
-          </ul>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="pi pi-mobile"></i>
-          </div>
-          <h3>{{ "home.features.responsive.title" | translate }}</h3>
-          <p>{{ "home.features.responsive.description" | translate }}</p>
-          <ul class="feature-list">
-            <li>{{ "home.features.responsive.mobile" | translate }}</li>
-            <li>{{ "home.features.responsive.tablet" | translate }}</li>
-            <li>{{ "home.features.responsive.desktop" | translate }}</li>
-          </ul>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="pi pi-cog"></i>
-          </div>
-          <h3>{{ "home.features.architecture.title" | translate }}</h3>
-          <p>{{ "home.features.architecture.description" | translate }}</p>
-          <ul class="feature-list">
-            <li>{{ "home.features.architecture.modular" | translate }}</li>
-            <li>{{ "home.features.architecture.services" | translate }}</li>
-            <li>{{ "home.features.architecture.guards" | translate }}</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-</div>
+<footer class="footer">
+  <div class="container">
+    <img class="logo" src="assets/images/logo.jpg" alt="TechStart Logo" />
+    <nav class="footer-nav">
+      <a href="#">Sobre</a>
+      <a href="#">Contato</a>
+      <a href="#">Privacidade</a>
+    </nav>
+  </div>
+  <p>&copy; 2025 TechStart. Todos os direitos reservados.</p>
+</footer>

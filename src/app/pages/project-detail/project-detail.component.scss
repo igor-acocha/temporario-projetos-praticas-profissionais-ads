@@ -1,0 +1,131 @@
+.header {
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--border-color);
+}
+.header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+}
+.logo {
+  height: 40px;
+  border-radius: 6px;
+}
+.nav a {
+  margin: 0 0.75rem;
+  color: #111930;
+  font-size: larger;
+  font-weight: 600;
+  text-decoration: none;
+}
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.hero {
+  background-color: #111930;
+  color: white;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+.hero h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.project-detail {
+  background-color: rgb(244, 241, 241);
+  padding: 30px;
+}
+
+.detail-card {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  margin-bottom: 1rem;
+}
+.detail-card h3 {
+  color: #0369a1;
+}
+.detail-card p {
+  color: #0369a1;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.skill {
+  background-color: #f59e0b; /* laranja das tags do protótipo */
+  color: #111930;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-weight: 600;
+}
+
+:host {
+  display: block;
+  padding-bottom: 120px; /* espaço para footer fixo */
+  background-color: rgb(244, 241, 241);
+  min-height: 100vh; /* garante que o fundo se estenda até o footer */
+}
+.footer {
+  background-color: #111930;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+}
+.footer .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.footer-nav a {
+  margin: 0 0.5rem;
+  color: var(--text-color-secondary);
+  font-size: larger;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+}
+.footer p {
+  color: white;
+  font-size: 0.75rem;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.btnComecar {
+  padding: 15px 100px;
+}
+
+.btnVoltar{
+  padding: 15px 100px;
+  margin-right: 20px;
+  color: #111930;
+  border-radius: 25px;
+  border-color: #111930;
+  font-weight: 600;
+}
+
+.btnRegistrar {
+  padding: 10px 20px;
+}

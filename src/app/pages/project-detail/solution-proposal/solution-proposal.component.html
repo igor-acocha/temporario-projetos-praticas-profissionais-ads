@@ -1,0 +1,65 @@
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '70vw' }"
+  styleClass="solution-proposal-dialog"
+>
+  <ng-template pTemplate="header">
+    <div class="modal-header">
+      <h2>{{ project?.title || "Texto Título do Projeto" }}</h2>
+      <p>
+        <a [routerLink]="['/perfil-entrepreneur', project?.entrepreneur?.id || '1']" class="link-empresa">
+          {{ project?.entrepreneur?.companyName || "Texto Empresa Anunciante" }}
+        </a>
+      </p>
+    </div>
+  </ng-template>
+
+  <div class="modal-content" *ngIf="!submitted; else successTpl">
+    <div class="detail-card">
+      <h3>Solução ofertada</h3>
+      <input
+        pInputText
+        [(ngModel)]="solutionTitle"
+        placeholder="Informe o título da solução"
+      />
+    </div>
+
+    <div class="detail-card">
+      <h3>Valor cobrado</h3>
+      <p-inputNumber
+        [(ngModel)]="solutionValue"
+        mode="currency"
+        currency="BRL"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="2"
+      ></p-inputNumber>
+    </div>
+
+    <div class="hero-actions">
+      <button
+        pButton
+        label="Enviar solução proposta"
+        class="p-button-rounded btnComecar"
+        (click)="submitProposal()"
+      ></button>
+      <button
+        pButton
+        label="Voltar"
+        class="p-button-text btnVoltar"
+        (click)="close()"
+      ></button>
+    </div>
+  </div>
+
+  <ng-template #successTpl>
+    <div class="detail-card">
+      <h3>Proposta enviada com sucesso</h3>
+      <p>Agradecemos o envio da sua proposta. Em breve a empresa poderá analisá-la.</p>
+      <div class="hero-actions">
+        <button pButton label="Fechar" class="p-button-rounded btnComecar" (click)="close()"></button>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,47 @@
+.modal-header h2 {
+  color: #111930;
+}
+.modal-header p {
+  color: #0369a1;
+}
+.detail-card {
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.detail-card input{
+  width: 100%;
+  padding-bottom: 50px;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.btnComecar {
+  padding: 15px 100px;
+}
+
+.btnVoltar{
+  padding: 15px 100px;
+  margin-right: 20px;
+  color: #111930;
+  border-radius: 25px;
+  border-color: #111930;
+  font-weight: 800;
+}
+
+:host ::ng-deep .solution-proposal-dialog .p-dialog-header,
+:host ::ng-deep .solution-proposal-dialog .p-dialog-content,
+:host ::ng-deep .solution-proposal-dialog .p-dialog-footer {
+  background-color: rgb(244, 241, 241);
+  border-radius: 10px;
+}
+:host ::ng-deep .solution-proposal-dialog .p-dialog-content {
+  background-color: rgb(244, 241, 241);
+}

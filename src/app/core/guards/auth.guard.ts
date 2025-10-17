@@ -17,7 +17,7 @@ export const authGuard: CanActivateFn = (route, state) => {
       if (isAuthenticated) {
         return true; // Usuário está logado, permite o acesso
       }
-      
+
       // Usuário não está logado, redireciona para a página de login
       router.navigate(['/login']);
       return false;
@@ -40,9 +40,33 @@ export const noAuthGuard: CanActivateFn = (route, state) => {
                 return true; // Não está logado, permite o acesso ao login/registro
             }
 
-            // Já está logado, redireciona para a home
-            router.navigate(['/home']);
+            // Já está logado, redireciona para a home-logada
+            router.navigate(['/home-logada']);
             return false;
         })
     );
+}
+
+export const studentGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  return authService.isAuthenticated$.pipe(
+    take(1),
+    map(isAuthenticated => {
+      if (!isAuthenticated) {
+        router.navigate(['/login']);
+        return false;
+      }
+
+      const role = authService.getCurrentUser()?.role;
+      if (role === 'STUDENT') {
+        return true;
+      }
+
+      // Usuário autenticado, porém não é estudante. Redireciona para home-logada.
+      router.navigate(['/home-logada']);
+      return false;
+    })
+  );
 }

@@ -1,0 +1,97 @@
+/* Container geral */
+.perfil-entrepreneur .container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Card da empresa (p-card) */
+.empresa-card {
+  width: 860px;
+  margin: 2rem auto;
+  border-radius: 1rem !important;
+}
+
+.card-header {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 10px;
+}
+.logo-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #e6f0ff;
+  color: #2a5bd7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+.empresa-info h2 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+.meta { color: var(--text-color-secondary); }
+
+.avaliacao {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-direction: column;
+}
+.stars { display: flex; gap: 0.25rem; }
+.ratings-count { color: var(--text-color-secondary); }
+.star { color: #ffd54f; }
+
+.conteudo {
+  padding: 1rem 0;
+}
+.secao + .secao { margin-top: 1rem; }
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+.btnVoltar { background: #e60012 !important; color: #fff; border-color: #e60012; }
+
+/* Header/Footer consistentes com outras páginas */
+.header {
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--border-color);
+}
+.header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+}
+.actions { display: flex; gap: 0.5rem; }
+.btnRegistrar{ padding: 10px 20px; }
+.logo { height: 40px; border-radius: 6px; }
+
+.footer {
+  background-color: #111930;
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  width: 100%; z-index: 10;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 20px;
+}
+.footer .container { display: flex; flex-direction: column; align-items: center; }
+.footer-nav a { margin: 0 0.5rem; color: var(--text-color-secondary); font-size: larger; font-weight: 600; text-decoration: none; text-align: center; }
+.footer p { color: white; font-size: 0.75rem; text-align: center; margin-top: 30px; }
+
+/* Evitar sobreposição do footer em telas menores */
+.perfil-entrepreneur { padding-bottom: 160px; }
+
+/* Responsividade */
+@media (max-width: 480px) {
+  .empresa-card { width: 100%; max-width: 360px; }
+}
+@media (max-height: 700px) {
+  .perfil-entrepreneur { padding-bottom: 200px; }
+}

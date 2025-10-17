@@ -37,6 +37,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     IconFieldModule,
     InputIconModule,
     InputNumberModule,
+    RouterModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -90,5 +91,8 @@ export class LoginComponent implements OnInit {
 
   goToRegister(): void {
     this.router.navigate(['/register']);
+  }
+  goToLogin(): void {
+    this.router.navigate(['/login']);
   }
 }

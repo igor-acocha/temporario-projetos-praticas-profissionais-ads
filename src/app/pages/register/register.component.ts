@@ -59,6 +59,14 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  goToLogin(): void {
+    this.router.navigate(['/login']);
+  }
+
+  goToRegister(): void {
+    this.router.navigate(['/register']);
+  }
+
   onSubmit(): void {
     if (this.registerForm.invalid) {
       return;

@@ -1,22 +1,31 @@
 import { Routes } from '@angular/router';
-import { authGuard, noAuthGuard } from './core/guards/auth.guard';
+import { authGuard, noAuthGuard, studentGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent),
     title: 'Login',
+    canActivate: [noAuthGuard]
   },
   {
     path: 'register',
     loadComponent: () => import('./pages/register/register.component').then(m => m.RegisterComponent),
     title: 'Register',
+    canActivate: [noAuthGuard]
   },
 
   {
     path: 'home',
     loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
     title: 'Home',
+    canActivate: [noAuthGuard]
+  },
+  {
+    path: 'home-logada',
+    loadComponent: () => import('./pages/home/home-logada.component').then(m => m.HomeLogadaComponent),
+    title: 'Home Logada',
+    canActivate: [authGuard]
   },
   {
     path: 'administrator',
@@ -39,6 +48,11 @@ export const routes: Routes = [
     title: 'Entrepreneur',
   },
   {
+    path: 'perfil-entrepreneur/:id',
+    loadComponent: () => import('./pages/perfil-entrepreneur/perfil-entrepreneur.component').then(m => m.PerfilEntrepreneurComponent),
+    title: 'Perfil da Empresa',
+  },
+  {
     path: 'evaluation',
     loadComponent: () => import('./pages/evaluation/evaluation.component').then(m => m.EvaluationComponent),
     title: 'Evaluation',
@@ -54,6 +68,11 @@ export const routes: Routes = [
     title: 'Project',
   },
   {
+    path: 'project-detail/:id',
+    loadComponent: () => import('./pages/project-detail/project-detail.component').then(m => m.ProjectDetailComponent),
+    title: 'Project Detail',
+  },
+  {
     path: 'skill',
     loadComponent: () => import('./pages/skill/skill.component').then(m => m.SkillComponent),
     title: 'Skill',
@@ -62,6 +81,11 @@ export const routes: Routes = [
     path: 'student',
     loadComponent: () => import('./pages/student/student.component').then(m => m.StudentComponent),
     title: 'Student',
+  },
+  {
+    path: 'projetos-disponiveis',
+    loadComponent: () => import('./pages/available-projects/available-projects.component').then(m => m.AvailableProjectsComponent),
+    title: 'Projetos Disponíveis'
   },
 
   // Redirecionamento principal:

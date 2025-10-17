@@ -6,7 +6,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 80vh;
   background: var(--surface-ground);
   padding: 2rem;
 }
@@ -98,7 +98,8 @@ p-message {
   margin-bottom: 1rem;
 }
 
-button[pButton] {
+/* Ajuste de escopo para não afetar botões do header */
+.login-container button[pButton] {
   width: 100%;
   border-radius: 2rem !important;
   font-weight: 600 !important;
@@ -106,10 +107,31 @@ button[pButton] {
   padding: 0.9rem 0 !important;
   background: var(--primary-color) !important;
   border: none !important;
+}
 
-  &:hover:not(:disabled) {
-    background: var(--primary-color-hover) !important;
-  }
+.login-container button[pButton]:hover:not(:disabled) {
+  background: var(--primary-color-hover) !important;
+}
+
+/* Garantir alinhamento horizontal dos botões no header e respeitar estilo p-button-text */
+/* Header: garantir estilos idênticos ao Home/Project Detail e corrigir botão Login */
+.header .actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center; /* alinhamento vertical */
+}
+.header .actions button[pButton] {
+  width: auto; /* evitar 100% */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Forçar p-button-text a manter estilo de texto sem fundo */
+.header .actions .p-button-text {
+  background: transparent !important;
+  border: none !important;
+  color: #111930 !important; /* mesma paleta da Home */
+  padding: 0.5rem 0.75rem !important;
 }
 
 /* Link de cadastro */
@@ -130,5 +152,123 @@ button[pButton] {
     &:hover {
       text-decoration: underline;
     }
+  }
+}
+
+/* ===================================== */
+/* HEADER E FOOTER (iguais à Home)       */
+/* ===================================== */
+.header {
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--border-color);
+}
+.header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+}
+
+.logo {
+  height: 40px;
+  border-radius: 6px;
+}
+.nav a {
+  margin: 0 0.75rem;
+  color: #111930;
+  font-size: larger;
+  font-weight: 600;
+  text-decoration: none;
+}
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.btnRegistrar{
+    padding: 10px 20px;
+}
+
+.hero-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  padding-top: 30px;
+}
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Fixar footer no final da página e evitar sobreposição com o conteúdo */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background: var(--surface-ground);
+  padding: 2rem;
+  padding-bottom: 140px; // reserva espaço para o footer fixo
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+.footer .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.footer-nav a {
+  margin: 0 0.5rem;
+  color: var(--text-color-secondary);
+  font-size: larger;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+}
+.footer p {
+  color: white;
+  font-size: 0.75rem;
+  text-align: center;
+  margin-top: 30px;
+}
+
+/* Cor de fundo do footer igual à Home */
+.footer {
+  background-color: #111930;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.footer-nav a {
+  margin: 0 0.5rem;
+  color: var(--text-color-secondary);
+  font-size: larger;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+}
+.footer p {
+  color: white;
+  font-size: 0.75rem;
+  text-align: center;
+  margin-top: 30px;
+}
+
+
+
+@media (max-width: 768px) {
+  .header .container {
+    flex-direction: column;
+    gap: 1rem;
   }
 }

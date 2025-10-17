@@ -8,6 +8,12 @@ export interface Entrepreneur {
   email: string;
   phone: string;
   registrationDate?: string;
+  foundedYear?: string;
+  city?: string;
+  state?: string;
+  segment?: string;
+  employees?: number;
+  taxId?: string;
   // Many-to-Many relationships
   businessAreas?: BusinessArea[];
 }
