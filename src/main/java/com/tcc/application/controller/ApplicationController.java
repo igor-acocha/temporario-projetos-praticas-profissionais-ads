@@ -30,9 +30,9 @@ public class ApplicationController {
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody @Valid CreateApplicationDto createApplicationDto) {
         Application Application = modelMapper.map(createApplicationDto, Application.class);
-        
+
         // Handle composite foreign keys
-        
+
         createApplicationUseCase.execute(Application);
         return ResponseEntity.created(null).build();
     }

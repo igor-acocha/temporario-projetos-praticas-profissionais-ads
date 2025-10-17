@@ -9,6 +9,7 @@ import com.tcc.interestArea.entity.InterestArea;
 import com.tcc.skill.entity.Skill;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.tcc.user.entity.User;
 
 @Entity
 @Table(name = "student")
@@ -52,4 +53,9 @@ public class Student {
     @JsonBackReference
     private List<Skill> skills = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    // Getter e Setter já gerados pelo Lombok
 }

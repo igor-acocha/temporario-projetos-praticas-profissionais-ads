@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import com.tcc.businessArea.entity.BusinessArea;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.tcc.user.entity.User;
 
 @Entity
 @Table(name = "entrepreneur")
@@ -49,4 +50,9 @@ public class Entrepreneur {
     @JsonBackReference
     private List<BusinessArea> businessAreas = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    // Getter e Setter já gerados pelo Lombok
 }

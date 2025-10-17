@@ -38,27 +38,26 @@ public class StudentController {
     private final GetByIdSkillUseCase getByIdSkillUseCase;
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid CreateStudentDto createStudentDto) {
-        Student Student = modelMapper.map(createStudentDto, Student.class);
-        
-        // Handle composite foreign keys
-        
-        // Handle many-to-many relationships
+    public ResponseEntity<String> create(@RequestBody @Valid CreateStudentDto createStudentDto) {
+        Student student = modelMapper.map(createStudentDto, Student.class);
         if (createStudentDto.getInterestAreas() != null && !createStudentDto.getInterestAreas().isEmpty()) {
             List<InterestArea> interestAreas = createStudentDto.getInterestAreas().stream()
                 .map(relationshipDto -> getByIdInterestAreaUseCase.execute(relationshipDto.getId()))
                 .collect(Collectors.toList());
-            Student.setInterestAreas(interestAreas);
+            student.setInterestAreas(interestAreas);
         }
         if (createStudentDto.getSkills() != null && !createStudentDto.getSkills().isEmpty()) {
             List<Skill> skills = createStudentDto.getSkills().stream()
                 .map(relationshipDto -> getByIdSkillUseCase.execute(relationshipDto.getId()))
                 .collect(Collectors.toList());
-            Student.setSkills(skills);
+            student.setSkills(skills);
         }
-        
-        createStudentUseCase.execute(Student);
-        return ResponseEntity.created(null).build();
+        try {
+            createStudentUseCase.execute(student);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Perfil criado com sucesso.");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 
     @GetMapping
@@ -85,29 +84,30 @@ public class StudentController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseStudentDto> update(
-            @PathVariable String id,
-            @RequestBody @Valid CreateStudentDto updateStudentDto) {
-        Student Student = modelMapper.map(updateStudentDto, Student.class);
-        
-        // Handle many-to-many relationships
-        if (updateStudentDto.getInterestAreas() != null) {
+    @PutMapping("/profile")
+    public ResponseEntity<String> update(@RequestBody @Valid CreateStudentDto updateStudentDto) {
+        Student student = modelMapper.map(updateStudentDto, Student.class);
+        // Trata relacionamentos muitos-para-muitos
+        if (updateStudentDto.getInterestAreas() != null && !updateStudentDto.getInterestAreas().isEmpty()) {
             List<InterestArea> interestAreas = updateStudentDto.getInterestAreas().stream()
                 .map(relationshipDto -> getByIdInterestAreaUseCase.execute(relationshipDto.getId()))
                 .collect(Collectors.toList());
-            Student.setInterestAreas(interestAreas);
+            student.setInterestAreas(interestAreas);
         }
-        if (updateStudentDto.getSkills() != null) {
+        if (updateStudentDto.getSkills() != null && !updateStudentDto.getSkills().isEmpty()) {
             List<Skill> skills = updateStudentDto.getSkills().stream()
                 .map(relationshipDto -> getByIdSkillUseCase.execute(relationshipDto.getId()))
                 .collect(Collectors.toList());
-            Student.setSkills(skills);
+            student.setSkills(skills);
         }
-        
-        Student updatedStudent = updateStudentUseCase.execute(id, Student);
-        ResponseStudentDto response = modelMapper.map(updatedStudent, ResponseStudentDto.class);
-        return ResponseEntity.ok(response);
+        try {
+            updateStudentUseCase.execute(student);
+            return ResponseEntity.ok("Perfil atualizado com sucesso.");
+        } catch (ResponseStatusException ex) {
+            return ResponseEntity.status(ex.getStatusCode()).body(ex.getReason());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao atualizar perfil: " + ex.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")

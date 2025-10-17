@@ -16,6 +16,14 @@ public class CreateProjectDto {
     private String title;
 
     @NotBlank
+    private String requirements;
+
+    @NotNull(message = "O prazo é obrigatório.")
+    @Future(message = "O prazo deve ser uma data futura.")
+    private java.time.LocalDate deadline;
+
+    @NotBlank
+    @Size(min = 300, message = "A descrição deve ter no mínimo 300 caracteres.")
     private String description;
 
     @NotBlank

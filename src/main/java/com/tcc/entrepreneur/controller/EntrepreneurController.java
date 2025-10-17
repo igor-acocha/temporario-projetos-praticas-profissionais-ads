@@ -35,21 +35,20 @@ public class EntrepreneurController {
     private final GetByIdBusinessAreaUseCase getByIdBusinessAreaUseCase;
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid CreateEntrepreneurDto createEntrepreneurDto) {
-        Entrepreneur Entrepreneur = modelMapper.map(createEntrepreneurDto, Entrepreneur.class);
-        
-        // Handle composite foreign keys
-        
-        // Handle many-to-many relationships
+    public ResponseEntity<String> create(@RequestBody @Valid CreateEntrepreneurDto createEntrepreneurDto) {
+        Entrepreneur entrepreneur = modelMapper.map(createEntrepreneurDto, Entrepreneur.class);
         if (createEntrepreneurDto.getBusinessAreas() != null && !createEntrepreneurDto.getBusinessAreas().isEmpty()) {
             List<BusinessArea> businessAreas = createEntrepreneurDto.getBusinessAreas().stream()
                 .map(relationshipDto -> getByIdBusinessAreaUseCase.execute(relationshipDto.getId()))
                 .collect(Collectors.toList());
-            Entrepreneur.setBusinessAreas(businessAreas);
+            entrepreneur.setBusinessAreas(businessAreas);
         }
-        
-        createEntrepreneurUseCase.execute(Entrepreneur);
-        return ResponseEntity.created(null).build();
+        try {
+            createEntrepreneurUseCase.execute(entrepreneur);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Perfil criado com sucesso.");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 
     @GetMapping
@@ -77,23 +76,24 @@ public class EntrepreneurController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseEntrepreneurDto> update(
-            @PathVariable String id,
-            @RequestBody @Valid CreateEntrepreneurDto updateEntrepreneurDto) {
-        Entrepreneur Entrepreneur = modelMapper.map(updateEntrepreneurDto, Entrepreneur.class);
-        
-        // Handle many-to-many relationships
-        if (updateEntrepreneurDto.getBusinessAreas() != null) {
+    @PutMapping("/profile")
+    public ResponseEntity<String> update(@RequestBody @Valid CreateEntrepreneurDto updateEntrepreneurDto) {
+        Entrepreneur entrepreneur = modelMapper.map(updateEntrepreneurDto, Entrepreneur.class);
+        // Trata relacionamentos muitos-para-muitos
+        if (updateEntrepreneurDto.getBusinessAreas() != null && !updateEntrepreneurDto.getBusinessAreas().isEmpty()) {
             List<BusinessArea> businessAreas = updateEntrepreneurDto.getBusinessAreas().stream()
                 .map(relationshipDto -> getByIdBusinessAreaUseCase.execute(relationshipDto.getId()))
                 .collect(Collectors.toList());
-            Entrepreneur.setBusinessAreas(businessAreas);
+            entrepreneur.setBusinessAreas(businessAreas);
         }
-        
-        Entrepreneur updatedEntrepreneur = updateEntrepreneurUseCase.execute(id, Entrepreneur);
-        ResponseEntrepreneurDto response = modelMapper.map(updatedEntrepreneur, ResponseEntrepreneurDto.class);
-        return ResponseEntity.ok(response);
+        try {
+            updateEntrepreneurUseCase.execute(entrepreneur);
+            return ResponseEntity.ok("Perfil atualizado com sucesso.");
+        } catch (ResponseStatusException ex) {
+            return ResponseEntity.status(ex.getStatusCode()).body(ex.getReason());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao atualizar perfil: " + ex.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")

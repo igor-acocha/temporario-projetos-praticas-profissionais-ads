@@ -30,9 +30,9 @@ public class EvaluationController {
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody @Valid CreateEvaluationDto createEvaluationDto) {
         Evaluation Evaluation = modelMapper.map(createEvaluationDto, Evaluation.class);
-        
+
         // Handle composite foreign keys
-        
+
         createEvaluationUseCase.execute(Evaluation);
         return ResponseEntity.created(null).build();
     }
@@ -48,7 +48,7 @@ public class EvaluationController {
             @RequestParam(required = false) String evaluatorType
     ) {
         List<Evaluation> Evaluations = getAllEvaluationUseCase.execute(score, comment, evaluationDate, idProject, idEvaluator, idEvaluated, evaluatorType);
-        
+
         List<ResponseEvaluationDto> response = Evaluations.stream()
                 .map(Evaluation -> modelMapper.map(Evaluation, ResponseEvaluationDto.class))
                 .collect(Collectors.toList());
@@ -68,7 +68,7 @@ public class EvaluationController {
             @PathVariable String id,
             @RequestBody @Valid CreateEvaluationDto updateEvaluationDto) {
         Evaluation Evaluation = modelMapper.map(updateEvaluationDto, Evaluation.class);
-        
+
         Evaluation updatedEvaluation = updateEvaluationUseCase.execute(id, Evaluation);
         ResponseEvaluationDto response = modelMapper.map(updatedEvaluation, ResponseEvaluationDto.class);
         return ResponseEntity.ok(response);
