@@ -1,6 +1,6 @@
 package com.tcc.user.entity;
 
-import com.tcc.user.entity.TypeProfile;
+import com.tcc.user.enums.TypeProfile;
 import jakarta.persistence.*;
 import lombok.*;
 

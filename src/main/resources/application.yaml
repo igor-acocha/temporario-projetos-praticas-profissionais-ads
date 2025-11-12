@@ -32,13 +32,23 @@ spring:
     mvc:
       locale: en_US
       locale-resolver: fixed
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 project:
   version: '@project.version@'
   description: '@project.description@'
   name: '@project.name@'
 app:
   cors:
-    allowed-origins: ${CORS_ALLOWED_
 jwt:
   secret: ${JWT_SECRET}
   expiration-ms: ${EXPIRATION_MS}

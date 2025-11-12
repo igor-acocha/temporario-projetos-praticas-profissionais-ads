@@ -1,5 +1,6 @@
 package com.tcc.application.entity;
 
+import com.tcc.user.entity.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 import com.tcc.student.entity.Student;
@@ -35,8 +36,8 @@ public class Application {
     private Double value;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_student")
-    private Student idStudent;
+    @JoinColumn(name = "id_user")
+    private User idUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_project")

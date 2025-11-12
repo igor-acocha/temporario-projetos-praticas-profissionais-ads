@@ -40,9 +40,6 @@ public class Student {
     @Column(name = "registration_date")
     private String registrationDate;
 
-    @OneToMany(mappedBy = "idStudent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Application> applications;
-
     // Relacionamento Many-to-Many simples - LADO INVERSO
     @ManyToMany(mappedBy = "students")
     @JsonBackReference

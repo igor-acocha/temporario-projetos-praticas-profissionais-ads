@@ -7,6 +7,8 @@ import com.tcc.project.adapter.repository.ProjectRepository;
 import com.tcc.student.adapter.repository.StudentRepository;
 import com.tcc.student.entity.Student;
 import com.tcc.project.entity.Project;
+import com.tcc.user.adapter.repository.UserRepository;
+import com.tcc.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,19 +22,25 @@ import java.time.format.DateTimeFormatter;
 public class CreateApplicationUseCase {
 
     private final ApplicationRepository repository;
-    private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
 
     public void execute(CreateApplicationDto dto) {
         Project project = projectRepository.findById(dto.getIdProject())
                 .orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado."));
 
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // 🔍 Busca o usuário no banco
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+
         // Criar a entidade Application
         Application application = new Application();
         application.setIdea(dto.getIdea());
         application.setValue(dto.getValue());
         application.setIdProject(project);
-        application.setIdStudent(null);
+        application.setIdUser(user);
 
         application.setStatus("ANALYZE");
         application.setApplicationDate(LocalDateTime.now());

@@ -1,6 +1,6 @@
 package com.tcc.user.dto;
 
-import com.tcc.user.entity.TypeProfile;
+import com.tcc.user.enums.TypeProfile;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

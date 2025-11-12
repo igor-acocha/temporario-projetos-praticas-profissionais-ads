@@ -30,26 +30,27 @@ public class SecurityConfig {
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
-    // Variável que define as rotas de acesso público
     private static final String[] PUBLIC_ROUTES = {
             "/api/v1/users/register",
             "/api/v1/users/login",
+            "/api/v1/password/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/swagger-ui.html",
+            "/swagger-ui.html"
     };
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(withDefaults()) // Habilita CORS
-                .csrf(csrf -> csrf.disable()) // Desabilita CSRF para APIs stateless
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PUBLIC_ROUTES).permitAll() // rotas públicas
-                        .anyRequest().authenticated() // todas as outras apenas precisam estar autenticadas
+                        .requestMatchers(PUBLIC_ROUTES).permitAll()
+                        .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // Filtro JWT
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -57,7 +58,6 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Define a origem permitida (seu frontend Angular)
         configuration.setAllowedOrigins(List.of("http://localhost:4200",
                 "https://tcc-frontend-production-8310.up.railway.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
@@ -65,7 +65,6 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // Aplica a configuração a todos os endpoints da API
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
