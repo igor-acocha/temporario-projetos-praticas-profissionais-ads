@@ -24,7 +24,7 @@ import { TranslationService } from './core/services/translation.service';
     RouterOutlet,
     ToastModule,
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
   ],
   providers: [MessageService],
   templateUrl: './app.component.html',

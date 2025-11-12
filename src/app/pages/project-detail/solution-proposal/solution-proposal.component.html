@@ -16,42 +16,62 @@
     </div>
   </ng-template>
 
-  <div class="modal-content" *ngIf="!submitted; else successTpl">
+  <form [formGroup]="proposalForm" (ngSubmit)="submitProposal()" *ngIf="!submitted; else successTpl">
     <div class="detail-card">
       <h3>Solução ofertada</h3>
-      <input
+      <textarea
         pInputText
-        [(ngModel)]="solutionTitle"
-        placeholder="Informe o título da solução"
-      />
+        formControlName="idea"
+        placeholder="Informe a sua ideia de solução"
+        class="w-full"
+      ></textarea>
+      <div *ngIf="proposalForm.get('idea')?.invalid && proposalForm.get('idea')?.touched" class="input-error">
+        <small *ngIf="proposalForm.get('idea')?.hasError('required')">Ideia é obrigatória.</small>
+        <small *ngIf="proposalForm.get('idea')?.hasError('minlength')">Ideia deve ter no mínimo 100 caracteres.</small>
+      </div>
     </div>
 
     <div class="detail-card">
       <h3>Valor cobrado</h3>
       <p-inputNumber
-        [(ngModel)]="solutionValue"
+        formControlName="value"
         mode="currency"
         currency="BRL"
         [minFractionDigits]="2"
         [maxFractionDigits]="2"
+        [useGrouping]="true"
+        [showButtons]="false"
+        placeholder="Informe o valor"
+        [allowEmpty]="true"
+        (blur)="proposalForm.get('value')?.markAsTouched()"
       ></p-inputNumber>
+
+      <div
+        *ngIf="proposalForm.get('value')?.invalid && proposalForm.get('value')?.touched"
+        class="input-error"
+      >
+        <small *ngIf="proposalForm.get('value')?.hasError('required')">O valor é obrigatório.</small>
+        <small *ngIf="proposalForm.get('value')?.hasError('min')">Informe um valor válido (maior que zero).</small>
+      </div>
     </div>
 
     <div class="hero-actions">
       <button
         pButton
-        label="Enviar solução proposta"
-        class="p-button-rounded btnComecar"
-        (click)="submitProposal()"
+        label="Cancelar"
+        class="p-button-text btnVoltar"
+        type="button"
+        (click)="close()"
       ></button>
       <button
         pButton
-        label="Voltar"
-        class="p-button-text btnVoltar"
-        (click)="close()"
+        label="Enviar solução proposta"
+        [disabled]="proposalForm.invalid || loading"
+        class="p-button-rounded btnComecar"
+        type="submit"
       ></button>
     </div>
-  </div>
+  </form>
 
   <ng-template #successTpl>
     <div class="detail-card">

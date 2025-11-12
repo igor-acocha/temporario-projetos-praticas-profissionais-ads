@@ -76,6 +76,29 @@ form {
 }
 
 /* ============================ */
+/* ESQUECI MINHA SENHA          */
+/* ============================ */
+
+.forgot-password-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -0.5rem;
+  
+  a {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+
+/* ============================ */
 /* RODAPÉ DO CARD (BOTÃO, LINKS)*/
 /* ============================ */
 
@@ -116,12 +139,27 @@ p-message {
   align-items: center;
   justify-content: center;
 }
+
 /* Forçar p-button-text a manter estilo de texto sem fundo */
 .header .actions .p-button-text {
   background: transparent !important;
   border: none !important;
   color: #111930 !important; /* mesma paleta da Home */
   padding: 0.5rem 0.75rem !important;
+}
+
+.text-center a {
+  color: #111930;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+  cursor: pointer;
+}
+
+/* Efeito hover */
+.text-center a:hover {
+  color: #007ad9; /* cor ao passar o mouse */
+  text-decoration: underline; /* opcional */
 }
 
 /* Link de cadastro */

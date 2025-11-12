@@ -37,4 +37,9 @@
   </div>
 </section>
 
-<app-solution-proposal #proposalComponent [(visible)]="proposalVisible" [project]="project"   (submit)="onSubmitProposal($event)"></app-solution-proposal>
+<app-solution-proposal 
+  #proposalComponent 
+  [(visible)]="proposalVisible" 
+  [project]="project"   
+  (proposalSubmit)="onSubmitProposal($event)">
+</app-solution-proposal>

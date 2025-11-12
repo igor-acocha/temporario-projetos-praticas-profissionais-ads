@@ -28,36 +28,113 @@
   <p-card styleClass="login-card shadow-5">
     <ng-template pTemplate="header">
       <div class="card-header">
-        <h2>Seja bem-vindo(a)</h2>
-        <p>Faça login para continuar</p>
+        <h2 *ngIf="!isForgotPasswordMode && !isCodeMode">Seja bem-vindo(a)</h2>
+        <h2 *ngIf="isForgotPasswordMode && !isCodeMode">Recuperar senha</h2>
+        <h2 *ngIf="isCodeMode">Redefinir senha</h2>
+
+        <p *ngIf="!isForgotPasswordMode && !isCodeMode">Faça login para continuar</p>
+        <p *ngIf="isForgotPasswordMode && !isCodeMode">
+          Informe seu e-mail para receber o código de redefinição
+        </p>
+        <p *ngIf="isCodeMode">
+          Digite o código recebido e escolha sua nova senha
+        </p>
       </div>
     </ng-template>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <!-- ===================== -->
+    <!-- LOGIN NORMAL -->
+    <!-- ===================== -->
+    <form *ngIf="!isForgotPasswordMode && !isCodeMode" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="p-fluid">
         <div class="field">
           <label for="email">E-mail</label>
           <input id="email" type="email" pInputText formControlName="email" placeholder="seuemail@exemplo.com" />
-          <small *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="input-error">
-            <span *ngIf="email?.errors?.['required']">E-mail é obrigatório.</span>
-            <span *ngIf="email?.errors?.['email']">Formato de e-mail inválido.</span>
-          </small>
+          <div *ngIf="email?.invalid && (email?.touched)" class="input-error">
+            <small *ngIf="email?.hasError('required')">E-mail é obrigatório.</small>
+            <small *ngIf="email?.hasError('email')">Informe um e-mail válido.</small>
+          </div>
         </div>
 
         <div class="field">
           <label for="password">Senha</label>
           <input id="password" type="password" pInputText formControlName="password" placeholder="Sua senha" />
-           <small *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="input-error">
-            Senha é obrigatória.
-          </small>
+          <div *ngIf="password?.invalid && (password?.touched)" class="input-error">
+            <small *ngIf="password?.hasError('required')">Senha é obrigatória.</small>
+            <small *ngIf="password?.hasError('minlength')">A senha deve ter pelo menos 8 caracteres.</small>
+          </div>
+        </div>
+
+        <div class="forgot-password-container cursor-pointer">
+          <a (click)="toggleForgotPassword()">Esqueci minha senha</a>
         </div>
       </div>
     </form>
-    
-    <ng-template pTemplate="footer">
-      <p-message *ngIf="errorMessage" severity="error" [text]="errorMessage" styleClass="w-full mb-3"></p-message>
 
-      <button pButton 
+    <!-- ===================== -->
+    <!-- PASSO 1: PEDIR CÓDIGO -->
+    <!-- ===================== -->
+    <form *ngIf="isForgotPasswordMode && !isCodeMode" [formGroup]="forgotPasswordForm" (ngSubmit)="onForgotPasswordSubmit()">
+      <div class="p-fluid">
+        <div class="field">
+          <label for="forgotEmail">E-mail</label>
+          <input id="forgotEmail" type="email" pInputText formControlName="email" placeholder="seuemail@exemplo.com" />
+          <div *ngIf="forgotPasswordForm.get('email')?.invalid && (forgotPasswordForm.get('email')?.touched)" class="input-error">
+            <small *ngIf="forgotPasswordForm.get('email')?.hasError('required')">E-mail é obrigatório.</small>
+            <small *ngIf="forgotPasswordForm.get('email')?.hasError('email')">Informe um e-mail válido.</small>
+          </div>
+        </div>
+
+
+        <button pButton label="Gerar código" type="submit" class="w-full" [loading]="loading"
+        [disabled]="forgotPasswordForm.invalid || loading"></button>
+
+        <div class="text-center mt-3 cursor-pointer ">
+          <a (click)="toggleForgotPassword()">Voltar ao login</a>
+        </div>
+      </div>
+    </form>
+
+    <!-- ===================== -->
+    <!-- PASSO 2: VALIDAR CÓDIGO + NOVA SENHA -->
+    <!-- ===================== -->
+    <form *ngIf="isCodeMode" [formGroup]="resetPasswordForm" (ngSubmit)="onResetPasswordSubmit()">
+      <div class="p-fluid">
+        <div class="field">
+          <label for="code">Código de verificação</label>
+          <input id="code" type="text" maxlength="6" pInputText formControlName="code" placeholder="Ex: 482193" 
+          (keypress)="allowOnlyNumbers($event)"/>
+          <div *ngIf="resetPasswordForm.get('code')?.invalid && (resetPasswordForm.get('code')?.touched)" class="input-error">
+            <small *ngIf="resetPasswordForm.get('code')?.hasError('required')">O código é obrigatório.</small>
+            <small *ngIf="resetPasswordForm.get('code')?.hasError('minlength')">O código deve ter 6 dígitos.</small>
+            <small *ngIf="resetPasswordForm.get('code')?.hasError('maxlength')">O código deve ter 6 dígitos.</small>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="newPassword">Nova senha</label>
+          <input id="newPassword" type="password" pInputText formControlName="newPassword" placeholder="Nova senha" />
+          <div *ngIf="resetPasswordForm.get('newPassword')?.invalid && resetPasswordForm.get('newPassword')?.touched" class="input-error">
+            <small *ngIf="resetPasswordForm.get('newPassword')?.hasError('required')">A nova senha é obrigatória.</small>
+            <small *ngIf="resetPasswordForm.get('newPassword')?.hasError('minlength')">A senha deve ter pelo menos 8 caracteres.</small>
+            <small *ngIf="resetPasswordForm.get('newPassword')?.hasError('weakPassword')">
+              A senha deve conter letras maiúsculas, minúsculas, números e caracteres especiais.
+            </small>
+          </div>
+        </div>
+
+        <button pButton label="Redefinir senha" type="submit" class="w-full" [loading]="loading"></button>
+
+        <div class="text-center mt-3 cursor-pointer">
+          <a (click)="cancelReset()">Cancelar</a>
+        </div>
+      </div>
+    </form>
+
+    <!-- FOOTER -->
+    <ng-template pTemplate="footer">
+      <button *ngIf="!isForgotPasswordMode && !isCodeMode"
+        pButton 
         type="submit" 
         label="Entrar" 
         [loading]="isLoggingIn"
@@ -66,22 +143,10 @@
         class="w-full">
       </button>
 
-      <div class="mt-4 text-center">
+      <div *ngIf="!isForgotPasswordMode && !isCodeMode" class="mt-4 text-center">
         <span>Não tem uma conta? </span>
-        <a (click)="goToRegister()">Cadastre-se</a>
+        <a (click)="goToRegister()" class="cursor-pointer">Cadastre-se</a>
       </div>
     </ng-template>
   </p-card>
 </div>
-
-<!-- <footer class="footer">
-  <div class="container">
-    <img class="logo" src="assets/images/logo.jpg" alt="TechStart Logo" />
-    <nav class="footer-nav">
-      <a href="#">Sobre</a>
-      <a href="#">Contato</a>
-      <a href="#">Privacidade</a>
-    </nav>
-  </div>
-  <p>&copy; 2025 TechStart. Todos os direitos reservados.</p>
-</footer> -->

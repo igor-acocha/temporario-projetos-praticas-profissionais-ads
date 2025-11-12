@@ -23,7 +23,7 @@ export class AuthService {
   private router = inject(Router);
 
   private apiUrl = `${environment.api.url}/users`;
-   
+  private passwordApiUrl = `${environment.api.url}/password`;
 
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
@@ -72,7 +72,6 @@ export class AuthService {
   }
 
   register(userData: any): Observable<any> {
-    console.log('API URL:', `${this.apiUrl}/register`);
     return this.http.post(`${this.apiUrl}/register`, userData).pipe(
       catchError(this.handleError)
     );
@@ -97,5 +96,20 @@ export class AuthService {
     const errorMessage = error.error?.message || 'Ocorreu um erro desconhecido.';
     return throwError(() => new Error(errorMessage));
   }
+
+  
+ requestPasswordCode(email: string): Observable<any> {
+    return this.http.post(`${this.passwordApiUrl}/request-code`, { email }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+
+  resetPassword(code: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.passwordApiUrl}/reset`, { code, newPassword }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
 }
 

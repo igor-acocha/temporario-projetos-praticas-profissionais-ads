@@ -41,10 +41,6 @@ export class ProjectDetailComponent implements OnInit {
   applicationForm!: FormGroup;
 
   ngOnInit(): void {
-    this.applicationForm = this.formBuilder.group({
-      idea: ['', [notBlankValidator(), Validators.maxLength(300)]],
-      value: ['', [notBlankValidator(), Validators.pattern(/^\d+(\.\d{1,2})?$/)]], 
-    });
     this.loadProjectById(this.route.snapshot.paramMap.get('id') || '');
     this.selectedProjectId = this.route.snapshot.paramMap.get('id')!;
   }
@@ -99,6 +95,8 @@ export class ProjectDetailComponent implements OnInit {
           summary: 'Erro',
           detail: err.error?.message || 'Falha ao enviar aplicação.'
         });
+
+        this.proposalComponent?.resetForm();
       }
     });
   }

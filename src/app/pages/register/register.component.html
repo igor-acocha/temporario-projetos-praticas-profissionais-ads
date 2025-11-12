@@ -1,3 +1,5 @@
+<p-toast></p-toast>
+
 <header class="header">
   <div class="container">
     <img class="logo" src="assets/images/logo.jpg" alt="TechStart Logo" />
@@ -24,7 +26,6 @@
   </div>
 </header>
 
-<p-toast></p-toast>
 <div class="register-container" [@pageAnimation]>
   <p-card styleClass="register-card shadow-5">
     <ng-template pTemplate="header">
@@ -38,34 +39,63 @@
       <div class="p-fluid">
         <div class="field">
           <label for="name">Nome Completo</label>
-          <input id="name" type="text" pInputText formControlName="name" />
+          <input id="name" type="text" pInputText formControlName="name"
+          placeholder="Digite seu nome completo"
+          pattern="[A-Za-zÀ-ÿ\s]*"
+          oninput="this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '')"/>
+          <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="input-error">
+            <small *ngIf="registerForm.get('name')?.hasError('required')">Nome é obrigatório.</small>
+          </div>
         </div>
 
         <div class="field">
           <label for="cpfCnpj">CPF ou CNPJ</label>
-          <input id="cpfCnpj" type="text" pInputText formControlName="cpfCnpj" />
+          <input id="cpfCnpj" type="text" pInputText formControlName="cpfCnpj"
+          placeholder="Digite apenas números do seu CPF ou CNPJ"
+          maxlength="14"
+          (input)="onNumericInput($event)"/>
+          <div *ngIf="registerForm.get('cpfCnpj')?.invalid && registerForm.get('cpfCnpj')?.touched" class="input-error">
+            <small *ngIf="registerForm.get('cpfCnpj')?.hasError('required')">CPF ou CNPJ é obrigatório.</small>
+            <small *ngIf="registerForm.get('cpfCnpj')?.hasError('cpfInvalid')">CPF inválido.</small>
+            <small *ngIf="registerForm.get('cpfCnpj')?.hasError('cnpjInvalid')">CNPJ inválido.</small>
+            <small *ngIf="registerForm.get('cpfCnpj')?.hasError('cpfCnpjInvalid')">Informe um CPF ou CNPJ válido.</small>
+          </div>
         </div>
 
         <div class="field">
           <label for="email">E-mail</label>
-          <input id="email" type="email" pInputText formControlName="email" />
+          <input id="email" type="email" pInputText formControlName="email"
+          placeholder="Digite seu e-mail" />
+          <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="input-error">
+            <small *ngIf="registerForm.get('email')?.hasError('required')">E-mail é obrigatório.</small>
+            <small *ngIf="registerForm.get('email')?.hasError('email')">E-mail inválido.</small>
+          </div>
         </div>
 
         <div class="field">
           <label for="password">Senha</label>
-          <input id="password" type="password" pInputText formControlName="password" />
+          <input id="password" type="password" pInputText formControlName="password" 
+          placeholder="Digite sua senha" />
+          <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="input-error">
+            <small *ngIf="registerForm.get('password')?.hasError('required')">Senha é obrigatória.</small>
+            <small *ngIf="registerForm.get('password')?.hasError('minlength')">Senha deve ter no mínimo 8 caracteres.</small>
+            <small *ngIf="registerForm.get('password')?.hasError('weakPassword')">
+              A senha deve conter letras maiúsculas, minúsculas, números e caracteres especiais.
+            </small>
+          </div>
         </div>
 
         <div class="field">
           <label for="typeProfile">Tipo de Perfil</label>
           <p-dropdown id="typeProfile" [options]="profileTypes" formControlName="typeProfile" placeholder="Selecione seu perfil"></p-dropdown>
+          <div *ngIf="registerForm.get('typeProfile')?.invalid && registerForm.get('typeProfile')?.touched" class="input-error">
+            <small *ngIf="registerForm.get('typeProfile')?.hasError('required')">Tipo de perfil é obrigatório.</small>
+          </div>
         </div>
       </div>
     </form>
 
     <ng-template pTemplate="footer">
-      <p-message *ngIf="errorMessage" severity="error" [text]="errorMessage" styleClass="w-full mb-3"></p-message>
-
       <button pButton 
               type="submit" 
               label="Cadastrar"
@@ -81,16 +111,4 @@
       </div>
     </ng-template>
   </p-card>
-</div>
 
-<!-- <footer class="footer">
-  <div class="container">
-    <img class="logo" src="assets/images/logo.jpg" alt="TechStart Logo" />
-    <nav class="footer-nav">
-      <a href="#">Sobre</a>
-      <a href="#">Contato</a>
-      <a href="#">Privacidade</a>
-    </nav>
-  </div>
-  <p>&copy; 2025 TechStart. Todos os direitos reservados.</p>
-</footer> -->
